@@ -1,1 +1,3 @@
-# pametni-paketnik
+# Pametni paketnik 📦
+
+### Navodila za namestitev
