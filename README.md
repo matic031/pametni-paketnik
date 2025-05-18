@@ -1,4 +1,4 @@
 # Pametni paketnik 📦
 
 ### Navodila za namestitev
-navodila
+navodila 
