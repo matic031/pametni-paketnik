@@ -54,7 +54,10 @@ module.exports = {
         var userModel = new UsermodelModel({
 			username : req.body.username,
 			password : req.body.password,
-			email : req.body.email
+			email : req.body.email,
+            name: req.body.name,
+            last_name: req.body.last_name,
+            phone: req.body.phone
         });
 
         userModel.save(function (err, userModel) {
@@ -92,6 +95,10 @@ module.exports = {
             userModel.username = req.body.username ? req.body.username : userModel.username;
 			userModel.password = req.body.password ? req.body.password : userModel.password;
 			userModel.email = req.body.email ? req.body.email : userModel.email;
+            userModel.name = req.body.name ? req.body.name : userModel.name;
+            userModel.last_name = req.body.last_name ? req.body.last_name : userModel.last_name;
+            userModel.phone = req.body.phone ? req.body.phone : userModel.phone;
+
 			
             userModel.save(function (err, userModel) {
                 if (err) {
