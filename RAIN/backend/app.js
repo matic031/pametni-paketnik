@@ -1,10 +1,13 @@
+require('dotenv').config();
+
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require('cors');
-const mongoose = require('mongoose');
+const mongoose = require('mongoose')
+
 
 // Import routes
 const indexRouter = require('./routes/index');
@@ -12,14 +15,24 @@ const usersRouter = require('./routes/users');
 
 // Initialize Express app
 const app = express();
+const PORT  = process.env.PORT || 3001 // Port for express
 
 // Connect to MongoDB
-mongoose.connect('mongodb://localhost:27017/smart-parcel-box', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
-.then(() => console.log('Connected to MongoDB'))
-.catch(err => console.error('Could not connect to MongoDB:', err));
+const MONGO_USER = process.env.MONGO_ROOT_USER;
+const MONGO_PASSWORD = process.env.MONGO_ROOT_PASSWORD;
+const MONGO_HOST = process.env.DB_MONGO_HOST;
+const MONGO_PORT = process.env.DB_MONGO_PORT;
+const DB_NAME = process.env.MONGO_INIT_DB;
+
+const mongoURI = `mongodb://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_HOST}:${MONGO_PORT}/${DB_NAME}?authSource=admin`;
+
+
+mongoose.connect(mongoURI)
+    .then(() => console.log(`Connection successful for MongoDB: ${DB_NAME}`))
+    .catch(err => {
+      console.error('Error: Connecting to database mongoDB:', err.message);
+      process.exit(1);
+    });
 
 // Middleware setup
 app.use(logger('dev'));
