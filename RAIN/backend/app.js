@@ -6,16 +6,17 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require('cors');
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
 
 // Import routes
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
+const authRouter = require('./routes/auth'); // Add auth routes
 
 // Initialize Express app
 const app = express();
-const PORT  = process.env.PORT || 3001 // Port for express
+const PORT = process.env.PORT || 3001 // Port for express
 
 // Connect to MongoDB
 const MONGO_USER = process.env.MONGO_ROOT_USER;
@@ -28,11 +29,11 @@ const mongoURI = `mongodb://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_HOST}:${MONG
 
 
 mongoose.connect(mongoURI)
-    .then(() => console.log(`Connection successful for MongoDB: ${DB_NAME}`))
-    .catch(err => {
-      console.error('Error: Connecting to database mongoDB:', err.message);
-      process.exit(1);
-    });
+  .then(() => console.log(`Connection successful for MongoDB: ${DB_NAME}`))
+  .catch(err => {
+    console.error('Error: Connecting to database mongoDB:', err.message);
+    process.exit(1);
+  });
 
 // Middleware setup
 app.use(logger('dev'));
@@ -45,14 +46,15 @@ app.use(cors());
 // Routes
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/auth', authRouter); // Add auth routes
 
 // Catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   next(createError(404));
 });
 
 // Error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   // Set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
