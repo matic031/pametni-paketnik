@@ -1,8 +1,8 @@
-version: '3.8'
+version: "3.8"
 services:
   mongo_db:
     image: mongo:latest
-    container_name: pametni_paketnik_name_db
+    container_name: pametni_paketnik_db
     restart: always
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USER}
