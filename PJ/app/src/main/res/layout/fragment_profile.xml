@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        tools:context=".ui.profile.ProfileFragment">
+
+        <ProgressBar
+            android:id="@+id/progressBarProfile"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible" />
+
+        <TextView
+            android:id="@+id/textViewWelcomeMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textAppearance="?attr/textAppearanceHeadline5"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Dobrodošli, Tomi!" />
+
+        <!-- ODSTRANJEN TextView z ID-jem textViewLoginSubtitle -->
+        <!--
+        <TextView
+            android:id="@+id/textViewLoginSubtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Uspešno ste prijavljeni v sistem Pametni Paketnik."
+            android:textAppearance="?attr/textAppearanceCaption"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textViewWelcomeMessage" />
+        -->
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardMojiPodatki"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            app:cardElevation="4dp"
+            app:cardCornerRadius="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textViewWelcomeMessage">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:id="@+id/textViewCardTitleMojiPodatki"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Moji podatki"
+                    android:textAppearance="?attr/textAppearanceHeadline6"
+                    android:drawableStart="@drawable/ic_account_purple_24dp"
+                    android:drawablePadding="8dp"
+                    android:gravity="center_vertical"
+                    app:drawableTint="?attr/colorPrimary" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="16dp"
+                    android:background="?android:attr/listDivider" />
+
+                <!-- Uporabniško ime -->
+                <LinearLayout style="@style/ProfileRowLayout">
+                    <ImageView style="@style/ProfileIcon" android:src="@drawable/ic_profile_purple_24dp"/>
+                    <TextView style="@style/ProfileLabel" android:text="Uporabniško ime:" />
+                    <TextView android:id="@+id/textViewUsername" style="@style/ProfileValue" tools:text="tomi" />
+                </LinearLayout>
+
+                <!-- E-pošta -->
+                <LinearLayout style="@style/ProfileRowLayout" android:layout_marginTop="8dp">
+                    <ImageView style="@style/ProfileIcon" android:src="@drawable/ic_email_purple_24dp"/>
+                    <TextView style="@style/ProfileLabel" android:text="E-pošta:" />
+                    <TextView android:id="@+id/textViewEmail" style="@style/ProfileValue" tools:text="tomi.cigula@student.um.si" />
+                </LinearLayout>
+
+                <!-- Ime -->
+                <LinearLayout style="@style/ProfileRowLayout" android:layout_marginTop="8dp">
+                    <ImageView style="@style/ProfileIcon" android:src="@drawable/ic_person_purple_24dp"/>
+                    <TextView style="@style/ProfileLabel" android:text="Ime:" />
+                    <TextView android:id="@+id/textViewName" style="@style/ProfileValue" tools:text="Tomi" />
+                </LinearLayout>
+
+                <!-- Priimek -->
+                <LinearLayout style="@style/ProfileRowLayout" android:layout_marginTop="8dp">
+                    <ImageView style="@style/ProfileIcon" android:src="@drawable/ic_person_purple_24dp"/> <!-- Lahko ista kot za Ime -->
+                    <TextView style="@style/ProfileLabel" android:text="Priimek:" />
+                    <TextView android:id="@+id/textViewLastName" style="@style/ProfileValue" tools:text="Cigula" />
+                </LinearLayout>
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <TextView
+            android:id="@+id/textViewProfileError"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center_horizontal"
+            android:textColor="@color/red_logout"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cardMojiPodatki"
+            tools:text="Napaka pri nalaganju profila."
+            tools:visibility="visible" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonLogoutProfile"
+            style="@style/Widget.MaterialComponents.Button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="16dp"
+            android:text="Odjava"
+            android:backgroundTint="@color/red_logout"
+            app:icon="@drawable/ic_logout_purple_24dp"
+            app:iconGravity="textStart"
+            app:layout_constraintVertical_bias="1.0"
+            app:layout_constraintTop_toBottomOf="@id/textViewProfileError"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
