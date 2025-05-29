@@ -2,6 +2,7 @@ package com.example.pametnipaketnik
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -32,7 +33,37 @@ class LoginActivity : AppCompatActivity() {
             loginViewModel.loginUser(username, password)
         }
 
+        binding.textViewRegisterLink.setOnClickListener{
+            val registerUrl = "http://10.0.2.2:5173/register" // URL za registracij0
+
+            val finalUrl = if (isEmulator()) {
+                registerUrl.replace("localhost", "10.0.2.2")
+            } else {
+               registerUrl
+            }
+
+            try {
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(finalUrl))
+                startActivity(intent)
+            } catch (e: Exception) {
+                // V primeru, da ni nameščenega brskalnika ali pride do druge napake
+                Toast.makeText(this, "Ne morem odpreti povezave za registracijo.", Toast.LENGTH_SHORT).show()
+                e.printStackTrace()
+            }
+        }
+
         observeViewModel()
+    }
+
+    private fun isEmulator(): Boolean {
+        return (android.os.Build.FINGERPRINT.startsWith("generic")
+                || android.os.Build.FINGERPRINT.startsWith("unknown")
+                || android.os.Build.MODEL.contains("google_sdk")
+                || android.os.Build.MODEL.contains("Emulator")
+                || android.os.Build.MODEL.contains("Android SDK built for x86")
+                || android.os.Build.MANUFACTURER.contains("Genymotion")
+                || (android.os.Build.BRAND.startsWith("generic") && android.os.Build.DEVICE.startsWith("generic"))
+                || "google_sdk" == android.os.Build.PRODUCT)
     }
 
     private fun checkIfUserIsLoggedIn() {

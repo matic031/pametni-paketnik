@@ -87,7 +87,7 @@
 
                 <!-- Uporabniško ime -->
                 <LinearLayout style="@style/ProfileRowLayout">
-                    <ImageView style="@style/ProfileIcon" android:src="@drawable/ic_account_purple_24dp"/>
+                    <ImageView style="@style/ProfileIcon" android:src="@drawable/ic_profile_purple_24dp"/>
                     <TextView style="@style/ProfileLabel" android:text="Uporabniško ime:" />
                     <TextView android:id="@+id/textViewUsername" style="@style/ProfileValue" tools:text="tomi" />
                 </LinearLayout>
