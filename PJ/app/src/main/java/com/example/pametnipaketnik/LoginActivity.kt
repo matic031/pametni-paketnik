@@ -25,6 +25,8 @@ class LoginActivity : AppCompatActivity() {
         checkIfUserIsLoggedIn()
 
         binding.buttonLogin.setOnClickListener {
+            binding.textViewError.visibility = View.GONE
+
             val username = binding.editTextUsername.text.toString().trim()
             val password = binding.editTextPassword.text.toString().trim()
             loginViewModel.loginUser(username, password)
@@ -52,6 +54,7 @@ class LoginActivity : AppCompatActivity() {
                 is LoginResult.Success -> {
                     binding.progressBarLogin.visibility = View.GONE
                     binding.buttonLogin.isEnabled = true
+                    binding.textViewError.visibility = View.GONE
                     // Uporabimo sporočilo iz API odgovora, če obstaja
                     Toast.makeText(this, result.response.message ?: "Prijava uspešna!", Toast.LENGTH_LONG).show()
 
@@ -66,6 +69,10 @@ class LoginActivity : AppCompatActivity() {
                     binding.buttonLogin.isEnabled = true
                     binding.textViewError.text = result.message
                     binding.textViewError.visibility = View.VISIBLE
+
+                    binding.editTextUsername.text?.clear()
+                    binding.editTextPassword.text?.clear()
+                    binding.editTextUsername.requestFocus()
                 }
             }
         }
