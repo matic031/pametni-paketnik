@@ -4,6 +4,7 @@ import os
 import matplotlib.pyplot as plt
 import random  # Za nekatere naključne odločitve pri augmentaciji
 import sys
+import argparse
 
 # --- Osnovne nastavitve ---
 PROJECT_DATA_DIR = os.path.join(os.getcwd(), 'data')  # Mapa, kjer so shranjeni .npz podatki
@@ -108,121 +109,127 @@ def display_original_and_augmented(original, augmented_list, aug_titles, main_ti
     plt.show()
 
 
+def run_augmentation(base_denoised_setting):
+        """
+        Naloži predobdelan učni set, izvede augmentacijo in shrani rezultate.
+        Prav tako shrani originalne validacijske in testne sete skupaj z augmentiranim učnim setom.
+        """
+        denoise_suffix_for_input = f"_denoise-{str(base_denoised_setting).lower()}"
+        processed_data_filename = f'lfw_processed_splits{denoise_suffix_for_input}.npz'
+        processed_data_path = os.path.join(PROJECT_DATA_DIR, processed_data_filename)
+
+        if not os.path.exists(processed_data_path):
+            print(f"NAPAKA: Datoteka s predobdelanimi podatki '{processed_data_path}' ne obstaja.")
+            print("Prosim, najprej zaženi skripto 'process_lfw_data.py' s pravilno nastavitvijo za denoising.")
+            return False  # Vrne False za neuspeh
+
+        print(f"Nalaganje predobdelanih podatkov iz: {processed_data_path}")
+        data = np.load(processed_data_path)
+        train_images_orig = data['train_images']
+        train_labels_orig = data['train_labels']
+        # Naložimo tudi val in test sete, da jih shranimo skupaj z augmentiranim train setom
+        val_images = data['val_images']
+        val_labels = data['val_labels']
+        test_images = data['test_images']
+        test_labels = data['test_labels']
+
+        print(f"Učna množica (original) naložena: {train_images_orig.shape[0]} slik.")
+
+        if train_images_orig.size == 0:
+            print("Učna množica je prazna. Augmentacija ni mogoča.")
+            return False
+
+        augmented_images_list = []
+        augmented_labels_list = []
+
+        print(f"\nZačenjam augmentacijo na {train_images_orig.shape[0]} učnih slikah...")
+
+        for i in range(train_images_orig.shape[0]):
+            original_image = train_images_orig[i]
+            original_label = train_labels_orig[i]
+
+            augmented_images_list.append(original_image)
+            augmented_labels_list.append(original_label)
+
+            choice = random.randint(1, 5)
+            augmented_image_single = None
+
+            if choice == 1:
+                augmented_image_single = custom_horizontal_flip(original_image.copy())
+            elif choice == 2:
+                factor = random.uniform(0.7, 1.3)
+                augmented_image_single = custom_adjust_brightness(original_image.copy(), factor)
+            elif choice == 3:
+                angle = random.uniform(-15, 15)
+                augmented_image_single = custom_rotate_image(original_image.copy(), angle)
+            elif choice == 4:
+                std = random.uniform(0.01, 0.08)
+                augmented_image_single = custom_add_gaussian_noise(original_image.copy(), std_dev=std)
+            elif choice == 5:
+                factor = random.uniform(0.6, 1.4)
+                augmented_image_single = custom_adjust_contrast(original_image.copy(), factor)
+
+            if augmented_image_single is not None:
+                augmented_images_list.append(augmented_image_single)
+                augmented_labels_list.append(original_label)
+
+            if (i + 1) % 500 == 0:
+                print(
+                    f"  Augmentiranih {i + 1} originalnih slik (trenutno {len(augmented_images_list)} slik v novem setu)...")
+
+        train_images_aug = np.array(augmented_images_list)
+        train_labels_aug = np.array(augmented_labels_list)
+
+        print(f"\nKončano augmentiranje. Originalni učni set: {train_images_orig.shape[0]} slik.")
+        print(f"Novi (augmentirani) učni set: {train_images_aug.shape[0]} slik.")
+
+        if train_images_orig.shape[0] > 0:  # Preverimo, če originalni train set ni prazen
+            num_to_show = min(3, train_images_orig.shape[0])  # Pokaži manj, če je set majhen
+            if num_to_show > 0:
+                random_indices = np.random.choice(train_images_orig.shape[0], num_to_show, replace=False)
+                for original_idx in random_indices:
+                    original_display_img = train_images_orig[original_idx]
+                    aug_list_display = [
+                        custom_horizontal_flip(original_display_img.copy()),
+                        custom_adjust_brightness(original_display_img.copy(), 1.2),
+                        custom_rotate_image(original_display_img.copy(), 10),
+                        custom_add_gaussian_noise(original_display_img.copy(), std_dev=0.05)
+                    ]
+                    aug_titles_display = ["Flip", "Svetlost (1.2)", "Rotacija (10d)", "Gaussov šum"]
+                    label_display = train_labels_orig[original_idx].decode('utf-8', errors='ignore')
+                    display_original_and_augmented(original_display_img, aug_list_display, aug_titles_display,
+                                                   main_title=f"Augmentacije za: {label_display[:20]}")
+
+        # Shranjevanje augmentiranega učnega nabora SKUPAJ z originalnimi val in test seti
+        denoise_suffix_for_output = f"_denoise-{str(base_denoised_setting).lower()}"
+        final_output_filename = f'lfw_final_dataset{denoise_suffix_for_output}.npz'  # Ime, ki ga pričakuje load_final...
+        final_output_path = os.path.join(PROJECT_DATA_DIR, final_output_filename)
+
+        if train_images_aug.size > 0:
+            np.savez_compressed(final_output_path,
+                                train_images=train_images_aug, train_labels=train_labels_aug,
+                                val_images=val_images, val_labels=val_labels,
+                                test_images=test_images, test_labels=test_labels)
+            print(f"\nKončni dataset (z augmentirano učno množico) shranjen v: {final_output_path}")
+            return True  # Vrne True za uspeh
+        else:
+            print("\nAugmentirana učna množica je prazna, podatki niso bili shranjeni.")
+            return False
+
+
 if __name__ == '__main__':
-    # 1. Nalaganje predobdelanih podatkov
-    processed_data_path = os.path.join(PROJECT_DATA_DIR, PROCESSED_DATA_FILENAME)
 
-    if not os.path.exists(processed_data_path):
-        print(f"NAPAKA: Datoteka s predobdelanimi podatki '{processed_data_path}' ne obstaja.")
-        print("Prosim, najprej zaženi skripto 'process_lfw_data.py'.")
-        sys.exit()  # Uporabi sys.exit() za izhod iz skripte
+    parser = argparse.ArgumentParser(description="Augmentacija LFW učnega dataseta.")
+    parser.add_argument(
+        '--base_denoised',
+        action='store_true',  # Če je podan --base_denoised, bo vrednost True
+        help="Označuje, da je bil osnovni dataset (iz katerega se augmentira) obdelan z odstranjevanjem šuma."
+    )
+    args = parser.parse_args()
 
-    print(f"Nalaganje predobdelanih podatkov iz: {processed_data_path}")
-    data = np.load(processed_data_path)
-    train_images = data['train_images']  # Slike so že normalizirane float32 [0,1]
-    train_labels = data['train_labels']
+    DENOISING_SETTING_FOR_INPUT_MAIN = args.base_denoised  # Vrednost iz argumenta
+    print(f"Augmentacija se bo izvedla na osnovi dataseta z denoising={DENOISING_SETTING_FOR_INPUT_MAIN}")
 
 
-    print(f"Učna množica naložena: {train_images.shape[0]} slik.")
 
-    if train_images.size == 0:
-        print("Učna množica je prazna. Augmentacija ni mogoča.")
-        sys.exit()
-
-    # 2. Priprava za augmentacijo
-    augmented_images_list = []
-    augmented_labels_list = []
-
-    # vsako sliko augmetiramo samo enkrat.
-
-    print(f"\nZačenjam augmentacijo na {train_images.shape[0]} učnih slikah...")
-
-    for i in range(train_images.shape[0]):
-        original_image = train_images[i]
-        original_label = train_labels[i]
-
-        # Dodaj originalno sliko in oznako na seznam
-        augmented_images_list.append(original_image)
-        augmented_labels_list.append(original_label)
-
-        # Izberi naključno eno od naših augmentacij za to sliko
-        # ali pa uporabi sekvenco/kombinacijo.
-
-        choice = random.randint(1, 5)  # Če imamo 5 augmentacij
-
-        augmented_image_single = None
-
-        if choice == 1:
-            # Horizontalni flip
-            augmented_image_single = custom_horizontal_flip(original_image.copy())
-        elif choice == 2:
-            # Sprememba svetlosti
-            factor = random.uniform(0.7, 1.3)  # Naključni faktor med 0.7 in 1.3
-            augmented_image_single = custom_adjust_brightness(original_image.copy(), factor)
-        elif choice == 3:
-            # Manjša rotacija (npr. med -15 in +15 stopinj)
-            angle = random.uniform(-15, 15)
-            augmented_image_single = custom_rotate_image(original_image.copy(), angle)
-        elif choice == 4:
-            # Dodajanje Gaussovega šuma
-            std = random.uniform(0.01, 0.08)  # Manjši std_dev za manj opazen šum
-            augmented_image_single = custom_add_gaussian_noise(original_image.copy(), std_dev=std)
-        elif choice == 5:
-            # Sprememba kontrasta
-            factor = random.uniform(0.6, 1.4)
-            augmented_image_single = custom_adjust_contrast(original_image.copy(), factor)
-
-        if augmented_image_single is not None:
-            augmented_images_list.append(augmented_image_single)
-            augmented_labels_list.append(original_label)  # Oznaka ostane ista
-
-        if (i + 1) % 500 == 0:
-            print(
-                f"  Augmentiranih {i + 1} originalnih slik (trenutno {len(augmented_images_list)} slik v novem setu)...")
-
-    augmented_train_images = np.array(augmented_images_list)
-    augmented_train_labels = np.array(augmented_labels_list)
-
-    print(f"\nKončano augmentiranje. Originalni učni set: {train_images.shape[0]} slik.")
-    print(f"Novi (augmentirani) učni set: {augmented_train_images.shape[0]} slik.")
-
-    #  Prikaz nekaj primerov. Slike augmentiramo z vsemi funkcijami za prikaz rezultatov.
-    if augmented_train_images.shape[0] > train_images.shape[0]:  # Če smo dejansko kaj dodali
-        num_to_show = 5
-        random_indices = np.random.choice(train_images.shape[0], num_to_show, replace=False)
-
-        for original_idx in random_indices:
-            # Najdi originalno sliko
-            original_display_img = train_images[original_idx]
-
-            # Za boljši prikaz:
-            display_idx_orig = original_idx  # Indeks originala v train_images
-
-            # Izvedemo nekaj augmentacij na tem specifičnem originalu za prikaz
-            aug_list_display = []
-            aug_titles_display = []
-
-            aug_list_display.append(custom_horizontal_flip(original_display_img.copy()))
-            aug_titles_display.append("Flip")
-
-            aug_list_display.append(custom_adjust_brightness(original_display_img.copy(), 1.2))
-            aug_titles_display.append("Svetlost (1.2)")
-
-            aug_list_display.append(custom_rotate_image(original_display_img.copy(), 10))
-            aug_titles_display.append("Rotacija (10d)")
-
-            aug_list_display.append(custom_add_gaussian_noise(original_display_img.copy(), std_dev=0.05))
-            aug_titles_display.append("Gaussov šum")
-
-            label_display = train_labels[display_idx_orig].decode('utf-8', errors='ignore')
-            display_original_and_augmented(original_display_img, aug_list_display, aug_titles_display,
-                                           main_title=f"Augmentacije za: {label_display[:20]}")
-            if num_to_show == 0: break  # En primer za prikaz
-            num_to_show -= 1
-
-    #Shranjevanje augmentiranega učnega nabora
-    augmented_output_path = os.path.join(PROJECT_DATA_DIR, AUGMENTED_DATA_FILENAME)
-    np.savez_compressed(augmented_output_path,
-                        train_images_aug=augmented_train_images,
-                        train_labels_aug=augmented_train_labels)
-    print(f"\nAugmentiran učni nabor shranjen v: {augmented_output_path}")
+    run_augmentation(base_denoised_setting=DENOISING_SETTING_FOR_INPUT_MAIN)

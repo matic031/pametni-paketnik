@@ -6,6 +6,7 @@ import os
 import cv2  # Uporabljam cv2 za obdelavo slik
 import matplotlib.pyplot as plt  # Za prikaz slik
 import sys  # Za sys.stderr, za izpis napak
+import argparse
 
 # --- Osnovne nastavitve ---
 PROJECT_DATA_DIR = os.path.join(os.getcwd(), 'data')  # Mapa, kjer se nahajajo podatki TFDS (LFW)
@@ -283,54 +284,77 @@ def display_sample_numpy_images(images, labels, count=5, title="Vzorčne slike")
     plt.show()  # Prilagodi postavitev in prikaži
 
 
-if __name__ == '__main__':  # Začetek glavnega dela, ki se izvede ob zagonu skripte
-    APPLY_DENOISING_MAIN = True  # Stikalo za vklop/izklop odstranjevanja šuma
-    print(f"*** Nastavitev odstranjevanja šuma: {APPLY_DENOISING_MAIN} ***")  # Izpis nastavitve
+def run_processing(apply_denoising_main_flag, show_plots=True):  # Dodan argument show_plots
+    """
+    Glavna funkcija za izvedbo celotnega procesa predobdelave podatkov.
+    """
+    print(f"*** Začenjam procesiranje LFW podatkov (Odstranjevanje šuma: {apply_denoising_main_flag}) ***")
 
-    # 1. Nalaganje in osnovna predobdelava (resize, opc. denoise, normalize)
     all_images_processed_np, all_labels_processed_np = load_and_preprocess_lfw(
-        # Klic funkcije za nalaganje in predobdelavo
         data_path=PROJECT_DATA_DIR,
-        # num_samples=100, # Za hitrejše testiranje na manjšem delu dataseta
-        num_samples=None,  # Uporabi celoten dataset
-        apply_denoising=APPLY_DENOISING_MAIN  # Posredovanje stikala za odstranjevanje šuma
+        num_samples=None,
+        apply_denoising=apply_denoising_main_flag
     )
 
-    if all_images_processed_np.size > 0:  # Če so bile slike uspešno predprocesirane
-        print(f"\nOblika vseh predprocesiranih slik: {all_images_processed_np.shape}")  # Izpis oblike arraya slik
-        print(f"Oblika vseh oznak: {all_labels_processed_np.shape}")  # Izpis oblike arraya oznak
-        if all_labels_processed_np.size > 0:  # Če obstajajo oznake
-            print(
-                f"Primer prve oznake: {all_labels_processed_np[0].decode('utf-8', errors='ignore')}")  # Izpis prve oznake
+    if all_images_processed_np.size > 0:
+        print(f"\nOblika vseh predprocesiranih slik: {all_images_processed_np.shape}")
+        print(f"Oblika vseh oznak: {all_labels_processed_np.shape}")
+        if all_labels_processed_np.size > 0:
+            print(f"Primer prve oznake: {all_labels_processed_np[0].decode('utf-8', errors='ignore')}")
 
-        display_sample_numpy_images(all_images_processed_np, all_labels_processed_np, count=10,
-                                    # Prikaz vzorčnih predprocesiranih slik
-                                    title=f"VSE SLIKE po predobdelavi (Denoise: {APPLY_DENOISING_MAIN})")
+        if show_plots:  # Opcijski prikaz
+            display_sample_numpy_images(all_images_processed_np, all_labels_processed_np, count=10,
+                                        title=f"VSE SLIKE po predobdelavi (Denoise: {apply_denoising_main_flag})")
 
-        # 2. Delitev podatkov na učno, validacijsko in testno množico
-        train_img, train_lbl, val_img, val_lbl, test_img, test_lbl = split_data_into_sets(  # Klic funkcije za delitev
-            all_images_processed_np, all_labels_processed_np,  # Predprocesirani podatki
-            val_share=VAL_SPLIT_SIZE_FROM_ALL,  # Delež za validacijsko množico
-            test_share=TEST_SPLIT_SIZE_FROM_ALL,  # Delež za testno množico
-            rnd_state=RANDOM_STATE  # Seme za ponovljivost
+        train_img, train_lbl, val_img, val_lbl, test_img, test_lbl = split_data_into_sets(
+            all_images_processed_np, all_labels_processed_np,
+            val_share=VAL_SPLIT_SIZE_FROM_ALL,
+            test_share=TEST_SPLIT_SIZE_FROM_ALL,
+            rnd_state=RANDOM_STATE
         )
 
-        # Prikaz vzorcev iz vsake množice
-        display_sample_numpy_images(train_img, train_lbl, count=max(1, min(3, len(train_img))),
-                                    title=f"UČNA (Denoise: {APPLY_DENOISING_MAIN})")
-        display_sample_numpy_images(val_img, val_lbl, count=max(1, min(3, len(val_img))),
-                                    title=f"VALIDACIJSKA (Denoise: {APPLY_DENOISING_MAIN})")
-        display_sample_numpy_images(test_img, test_lbl, count=max(1, min(3, len(test_img))),
-                                    title=f"TESTNA (Denoise: {APPLY_DENOISING_MAIN})")
+        if show_plots:  # Opcijski prikaz
+            display_sample_numpy_images(train_img, train_lbl, count=max(1, min(3, len(train_img))),
+                                        title=f"UČNA (Denoise: {apply_denoising_main_flag})")
+            display_sample_numpy_images(val_img, val_lbl, count=max(1, min(3, len(val_img))),
+                                        title=f"VALIDACIJSKA (Denoise: {apply_denoising_main_flag})")
+            display_sample_numpy_images(test_img, test_lbl, count=max(1, min(3, len(test_img))),
+                                        title=f"TESTNA (Denoise: {apply_denoising_main_flag})")
 
-        # 3. Shranjevanje podatkovnih množic v .npz datoteko
-        denoise_suffix = f"_denoise-{str(APPLY_DENOISING_MAIN).lower()}"  # Dodatek k imenu datoteke glede na odstranjevanje šuma
-        save_splits_to_npz(  # Klic funkcije za shranjevanje
-            path=PROJECT_DATA_DIR,  # Mapa za shranjevanje
-            denoise_info=denoise_suffix,  # Informacija o odstranjevanju šuma za ime datoteke
-            train_images=train_img, train_labels=train_lbl,  # Podatki za shranjevanje
+        denoise_suffix = f"_denoise-{str(apply_denoising_main_flag).lower()}"
+        save_splits_to_npz(
+            path=PROJECT_DATA_DIR,
+            filename_prefix="lfw_processed_splits",
+            denoise_info=denoise_suffix,
+            train_images=train_img, train_labels=train_lbl,
             val_images=val_img, val_labels=val_lbl,
             test_images=test_img, test_labels=test_lbl
         )
-    else:  # Če predobdelava ni vrnila nobenih slik
+        return True  # Vrne True za uspeh
+    else:
         print("Ni bilo naloženih nobenih slik po predobdelavi, nadaljnja obdelava ni mogoča.")
+        return False  # Vrne False za neuspeh
+
+
+if __name__ == '__main__':  # Začetek glavnega dela, ki se izvede ob zagonu skripte
+    parser = argparse.ArgumentParser(description="Predelava LFW dataseta.")
+    parser.add_argument(
+        '--denoise',
+        action='store_true',  # Če je podan --denoise, bo args.denoise True
+        help="Vklopi odstranjevanje šuma med predobdelavo."
+    )
+    parser.add_argument(
+        '--no_plots',  # Nov argument za izklop prikazov
+        action='store_true',
+        help="Izklopi prikazovanje slik z matplotlib."
+    )
+    args = parser.parse_args()
+
+    APPLY_DENOISING_FROM_ARGS = args.denoise
+    SHOW_PLOTS_FLAG = not args.no_plots  # Če je --no_plots podan, bo show_plots False
+
+    print(f"Argument --denoise je nastavljen na: {APPLY_DENOISING_FROM_ARGS}")
+    print(f"Argument --no_plots je nastavljen na: {args.no_plots} (Prikaz slik: {SHOW_PLOTS_FLAG})")
+
+
+    run_processing(apply_denoising_main_flag=APPLY_DENOISING_FROM_ARGS, show_plots=SHOW_PLOTS_FLAG)
