@@ -17,8 +17,8 @@ export const AuthProvider = ({ children }) => {
         if (token) {
           axios.defaults.headers.common["Authorization"] = token;
 
-          //TODO: use env var here isntead of hardcoding
-          const response = await axios.get("http://localhost:3001/auth/me");
+          const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+          const response = await axios.get(`${API_URL}/auth/me`);
           if (response.data.success) {
             setUser(response.data.user);
           } else {
@@ -40,8 +40,9 @@ export const AuthProvider = ({ children }) => {
   const register = async (userData) => {
     setError(null);
     try {
+      const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
       const response = await axios.post(
-        "http://localhost:3001/auth/register",
+        `${API_URL}/auth/register`,
         userData
       );
       return { success: true, message: response.data.message };
@@ -56,7 +57,8 @@ export const AuthProvider = ({ children }) => {
   const login = async (username, password) => {
     setError(null);
     try {
-      const response = await axios.post("http://localhost:3001/auth/login", {
+      const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+      const response = await axios.post(`${API_URL}/auth/login`, {
         username,
         password,
       });

@@ -16,7 +16,9 @@ const authRouter = require('./routes/auth'); // Add auth routes
 
 // Initialize Express app
 const app = express();
-const PORT = process.env.PORT || 3001 // Port for express
+const PORT = process.env.PORT || 3000
+
+mongoose.set('strictQuery', false);
 
 // Connect to MongoDB
 const MONGO_USER = process.env.MONGO_ROOT_USER;
@@ -37,11 +39,15 @@ mongoose.connect(mongoURI)
 
 // Middleware setup
 app.use(logger('dev'));
+app.use(cors({
+  origin: ['http://localhost:8080', 'http://localhost:5173'],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(cors());
 
 // Routes
 app.use('/', indexRouter);
