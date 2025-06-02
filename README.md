@@ -2,25 +2,18 @@
 
 ### Navodila za namestitev
 
-## Running the Backend Database (MongoDB with Docker)
+1.  **Konfiguracija okoljskih spremenljivk:**
 
-1.  **Configure Environment Variables:**
+    - V direktorijema `RAIN/frontend` in `AIN/backend`, kopirajte `.env.example` v `.env`:
+    - Uredite novo datoteko `.env` in vnesite vaš `MONGO_ROOT_USER` in `MONGO_ROOT_PASSWORD`.
 
-    - In the project's root directory (where `docker-compose.yml` is located), copy `.env.example` to `.env`:
-      ```bash
-      cp .env.example .env
-      ```
-    - Edit the new `.env` file and fill in your `MONGO_ROOT_USER` and `MONGO_ROOT_PASSWORD`.
+2.  **Zagon Docker kontejnerjev (backend, podatkovna baza, frontend):**
 
-2.  **Start the Database:**
-
-    - Go to the project's root directory.
-    - Run:
+    - Pojdite v mapo RAIN
+    - Zaženite:
 
       ```bash
-      docker-compose up -d
+      bash start.sh
       ```
-
-      if port is already used run: `sudo systemctl stop mongod`
 
 ---
