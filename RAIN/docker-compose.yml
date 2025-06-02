@@ -1,0 +1,67 @@
+version: "3.8"
+services:
+  mongo_db:
+    image: mongo:latest
+    container_name: pametni_paketnik_db
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USER:-admin}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD:-admin123}
+      MONGO_INITDB_DATABASE: ${MONGO_INIT_DB:-pametni_paketnik_db}
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - app-network
+    env_file:
+      - ./backend/.env
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: pametni_paketnik_backend
+    restart: always
+    environment:
+      MONGO_ROOT_USER: ${MONGO_ROOT_USER:-admin}
+      MONGO_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD:-admin123}
+      MONGO_INIT_DB: ${MONGO_INIT_DB:-pametni_paketnik_db}
+      DB_MONGO_HOST: mongo_db
+      DB_MONGO_PORT: 27017
+      PORT: 3000
+      JWT_SECRET: ${JWT_SECRET:-pametni_paketnik_secure_jwt_key}
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongo_db
+    networks:
+      - app-network
+    env_file:
+      - ./backend/.env
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - VITE_API_URL=${VITE_API_URL:-http://localhost:3000}
+    container_name: pametni_paketnik_frontend
+    ports:
+      - "8080:80"
+    volumes:
+      - ./frontend/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    restart: unless-stopped
+    env_file:
+      - ./frontend/.env
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mongo_data:
