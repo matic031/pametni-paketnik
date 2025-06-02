@@ -3,6 +3,8 @@ from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Input, Conv2D, MaxPooling2D, Flatten, Dense, BatchNormalization, Lambda
 from . import config  # Uporabi relativni import
 
+def l2_normalize_layer_func(tensor_input):
+    return tf.math.l2_normalize(tensor_input, axis=1)
 
 def create_embedding_model(input_shape=(config.IMG_HEIGHT, config.IMG_WIDTH, config.IMG_CHANNELS),
                            embedding_dim=config.EMBEDDING_DIM):
@@ -42,13 +44,13 @@ def create_embedding_model(input_shape=(config.IMG_HEIGHT, config.IMG_WIDTH, con
     x = BatchNormalization(name='bn_dense1')(x)
 
     # Embedding plast - brez aktivacije ali z linearno, nato L2 normalizacija
-    embeddings = Dense(embedding_dim, activation=None, name='embedding_dense')(x)
+    embeddings_dense = Dense(embedding_dim, activation=None, name='embedding_dense')(x)
     # L2 normalizacija embeddingov, da so vsi na enotski hipersferi
-    embeddings = Lambda(lambda y: tf.math.l2_normalize(y, axis=1),
-                        output_shape=(embedding_dim,),  # Eksplicitno podaj output_shape
-                        name='embedding_l2_norm')(embeddings)
+    embeddings_normalized = Lambda(l2_normalize_layer_func,  # Uporabi definirano funkcijo
+                                   output_shape=(embedding_dim,),
+                                   name='embedding_l2_norm')(embeddings_dense)
 
-    model = Model(inputs=inputs, outputs=embeddings, name='EmbeddingModel')
+    model = Model(inputs=inputs, outputs=embeddings_normalized, name='EmbeddingModel')
     return model
 
 
