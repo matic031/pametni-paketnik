@@ -136,3 +136,9 @@ dist
 .pnp.*
 
 data/
+
+test/
+
+models/
+
+logs/
