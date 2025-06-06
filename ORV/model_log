@@ -1,0 +1,250 @@
+/home/tomi/PycharmProjects/ORV-Uvod/.venv/bin/python /home/tomi/Documents/Studij/Letnik2/Semester2/pametni-paketnik/ORV/src/train_face_recognition_model.py
+2025-06-06 22:28:33.230167: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+2025-06-06 22:28:33.230852: I external/local_xla/xla/tsl/cuda/cudart_stub.cc:32] Could not find cuda drivers on your machine, GPU will not be used.
+2025-06-06 22:28:33.234426: I external/local_xla/xla/tsl/cuda/cudart_stub.cc:32] Could not find cuda drivers on your machine, GPU will not be used.
+2025-06-06 22:28:33.243125: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:467] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+E0000 00:00:1749241713.258386   22062 cuda_dnn.cc:8579] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+E0000 00:00:1749241713.263072   22062 cuda_blas.cc:1407] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+W0000 00:00:1749241713.278017   22062 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+W0000 00:00:1749241713.278043   22062 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+W0000 00:00:1749241713.278046   22062 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+W0000 00:00:1749241713.278048   22062 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+2025-06-06 22:28:33.281772: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 AVX512F AVX512_VNNI AVX512_BF16 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2025-06-06 22:28:35.368890: E external/local_xla/xla/stream_executor/cuda/cuda_platform.cc:51] failed call to cuInit: INTERNAL: CUDA error: Failed call to cuInit: UNKNOWN ERROR (303)
+GPU ni na voljo, model se bo učil na CPU.
+--- Začetek procesa učenja modela za prepoznavo obrazov ---
+
+[KORAK 1/5] Nalaganje pripravljenih podatkov...
+Podatki uspešno naloženi iz /home/tomi/Documents/Studij/Letnik2/Semester2/pametni-paketnik/ORV/data/lfw_final_dataset_denoise-false.npz
+  Učna množica: 64393 slik
+  Validacijska množica: 1972 slik
+  Testna množica: 1972 slik
+
+[KORAK 2/5] Priprava generatorjev podatkov...
+  Train generator: 625 batchev na epoho.
+  Validation generator: 157 batchev na epoho.
+
+[KORAK 3/5] Definiranje modelov...
+--- Struktura Embedding Modela ---
+Model: "EmbeddingModel"
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┓
+┃ Layer (type)                    ┃ Output Shape           ┃       Param # ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━┩
+│ input_image (InputLayer)        │ (None, 64, 64, 3)      │             0 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ conv1_1 (Conv2D)                │ (None, 64, 64, 32)     │           896 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ bn1_1 (BatchNormalization)      │ (None, 64, 64, 32)     │           128 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ conv1_2 (Conv2D)                │ (None, 64, 64, 32)     │         9,248 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ bn1_2 (BatchNormalization)      │ (None, 64, 64, 32)     │           128 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ pool1 (MaxPooling2D)            │ (None, 32, 32, 32)     │             0 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ conv2_1 (Conv2D)                │ (None, 32, 32, 64)     │        18,496 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ bn2_1 (BatchNormalization)      │ (None, 32, 32, 64)     │           256 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ conv2_2 (Conv2D)                │ (None, 32, 32, 64)     │        36,928 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ bn2_2 (BatchNormalization)      │ (None, 32, 32, 64)     │           256 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ pool2 (MaxPooling2D)            │ (None, 16, 16, 64)     │             0 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ conv3_1 (Conv2D)                │ (None, 16, 16, 128)    │        73,856 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ bn3_1 (BatchNormalization)      │ (None, 16, 16, 128)    │           512 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ conv3_2 (Conv2D)                │ (None, 16, 16, 128)    │       147,584 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ bn3_2 (BatchNormalization)      │ (None, 16, 16, 128)    │           512 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ pool3 (MaxPooling2D)            │ (None, 8, 8, 128)      │             0 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ conv4_1 (Conv2D)                │ (None, 8, 8, 256)      │       295,168 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ bn4_1 (BatchNormalization)      │ (None, 8, 8, 256)      │         1,024 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ conv4_2 (Conv2D)                │ (None, 8, 8, 256)      │       590,080 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ bn4_2 (BatchNormalization)      │ (None, 8, 8, 256)      │         1,024 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ pool4 (MaxPooling2D)            │ (None, 4, 4, 256)      │             0 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ flatten (Flatten)               │ (None, 4096)           │             0 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ dense1 (Dense)                  │ (None, 512)            │     2,097,664 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ bn_dense1 (BatchNormalization)  │ (None, 512)            │         2,048 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ embedding_dense (Dense)         │ (None, 128)            │        65,664 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ embedding_l2_norm (Lambda)      │ (None, 128)            │             0 │
+└─────────────────────────────────┴────────────────────────┴───────────────┘
+ Total params: 3,341,472 (12.75 MB)
+ Trainable params: 3,338,528 (12.74 MB)
+ Non-trainable params: 2,944 (11.50 KB)
+
+--- Struktura Triplet Training Modela ---
+Model: "TripletTrainingModel"
+┏━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━┓
+┃ Layer (type)        ┃ Output Shape      ┃    Param # ┃ Connected to      ┃
+┡━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━┩
+│ anchor_input        │ (None, 64, 64, 3) │          0 │ -                 │
+│ (InputLayer)        │                   │            │                   │
+├─────────────────────┼───────────────────┼────────────┼───────────────────┤
+│ positive_input      │ (None, 64, 64, 3) │          0 │ -                 │
+│ (InputLayer)        │                   │            │                   │
+├─────────────────────┼───────────────────┼────────────┼───────────────────┤
+│ negative_input      │ (None, 64, 64, 3) │          0 │ -                 │
+│ (InputLayer)        │                   │            │                   │
+├─────────────────────┼───────────────────┼────────────┼───────────────────┤
+│ EmbeddingModel      │ (None, 128)       │  3,341,472 │ anchor_input[0][… │
+│ (Functional)        │                   │            │ positive_input[0… │
+│                     │                   │            │ negative_input[0… │
+├─────────────────────┼───────────────────┼────────────┼───────────────────┤
+│ merged_embeddings   │ (None, 384)       │          0 │ EmbeddingModel[0… │
+│ (Lambda)            │                   │            │ EmbeddingModel[1… │
+│                     │                   │            │ EmbeddingModel[2… │
+└─────────────────────┴───────────────────┴────────────┴───────────────────┘
+ Total params: 3,341,472 (12.75 MB)
+ Trainable params: 3,338,528 (12.74 MB)
+ Non-trainable params: 2,944 (11.50 KB)
+
+[KORAK 4/5] Kompilacija modela...
+Model uspešno kompajliran.
+
+[KORAK 5/5] Začetek učenja modela...
+Epoch 1/30
+625/625 ━━━━━━━━━━━━━━━━━━━━ 0s 291ms/step - loss: 0.1611
+Epoch 1: val_loss improved from inf to 0.33685, saving model to /home/tomi/Documents/Studij/Letnik2/Semester2/pametni-paketnik/ORV/models/triplet_model_best_ep01_loss0.34.keras
+625/625 ━━━━━━━━━━━━━━━━━━━━ 197s 308ms/step - loss: 0.1611 - val_loss: 0.3369 - learning_rate: 0.0010
+Epoch 2/30
+625/625 ━━━━━━━━━━━━━━━━━━━━ 0s 296ms/step - loss: 0.0715
+Epoch 2: val_loss improved from 0.33685 to 0.24835, saving model to /home/tomi/Documents/Studij/Letnik2/Semester2/pametni-paketnik/ORV/models/triplet_model_best_ep02_loss0.25.keras
+625/625 ━━━━━━━━━━━━━━━━━━━━ 195s 312ms/step - loss: 0.0715 - val_loss: 0.2483 - learning_rate: 0.0010
+Epoch 3/30
+625/625 ━━━━━━━━━━━━━━━━━━━━ 0s 281ms/step - loss: 0.0482
+Epoch 3: val_loss improved from 0.24835 to 0.20573, saving model to /home/tomi/Documents/Studij/Letnik2/Semester2/pametni-paketnik/ORV/models/triplet_model_best_ep03_loss0.21.keras
+625/625 ━━━━━━━━━━━━━━━━━━━━ 186s 297ms/step - loss: 0.0482 - val_loss: 0.2057 - learning_rate: 0.0010
+Epoch 4/30
+625/625 ━━━━━━━━━━━━━━━━━━━━ 0s 269ms/step - loss: 0.0353
+Epoch 4: val_loss improved from 0.20573 to 0.15074, saving model to /home/tomi/Documents/Studij/Letnik2/Semester2/pametni-paketnik/ORV/models/triplet_model_best_ep04_loss0.15.keras
+625/625 ━━━━━━━━━━━━━━━━━━━━ 177s 284ms/step - loss: 0.0353 - val_loss: 0.1507 - learning_rate: 0.0010
+Epoch 5/30
+625/625 ━━━━━━━━━━━━━━━━━━━━ 0s 264ms/step - loss: 0.0332
+Epoch 5: val_loss improved from 0.15074 to 0.13989, saving model to /home/tomi/Documents/Studij/Letnik2/Semester2/pametni-paketnik/ORV/models/triplet_model_best_ep05_loss0.14.keras
+625/625 ━━━━━━━━━━━━━━━━━━━━ 174s 279ms/step - loss: 0.0332 - val_loss: 0.1399 - learning_rate: 0.0010
+Epoch 6/30
+625/625 ━━━━━━━━━━━━━━━━━━━━ 0s 267ms/step - loss: 0.0325
+Epoch 6: val_loss did not improve from 0.13989
+625/625 ━━━━━━━━━━━━━━━━━━━━ 176s 282ms/step - loss: 0.0325 - val_loss: 0.1503 - learning_rate: 0.0010
+Epoch 7/30
+625/625 ━━━━━━━━━━━━━━━━━━━━ 0s 264ms/step - loss: 0.0293
+Epoch 7: val_loss did not improve from 0.13989
+625/625 ━━━━━━━━━━━━━━━━━━━━ 175s 279ms/step - loss: 0.0293 - val_loss: 0.1422 - learning_rate: 0.0010
+Epoch 8/30
+625/625 ━━━━━━━━━━━━━━━━━━━━ 0s 264ms/step - loss: 0.0294
+Epoch 8: val_loss did not improve from 0.13989
+625/625 ━━━━━━━━━━━━━━━━━━━━ 174s 279ms/step - loss: 0.0294 - val_loss: 0.1464 - learning_rate: 0.0010
+Epoch 9/30
+625/625 ━━━━━━━━━━━━━━━━━━━━ 0s 264ms/step - loss: 0.0272
+Epoch 9: val_loss improved from 0.13989 to 0.12167, saving model to /home/tomi/Documents/Studij/Letnik2/Semester2/pametni-paketnik/ORV/models/triplet_model_best_ep09_loss0.12.keras
+625/625 ━━━━━━━━━━━━━━━━━━━━ 175s 279ms/step - loss: 0.0272 - val_loss: 0.1217 - learning_rate: 0.0010
+Epoch 10/30
+625/625 ━━━━━━━━━━━━━━━━━━━━ 0s 264ms/step - loss: 0.0238
+Epoch 10: val_loss did not improve from 0.12167
+625/625 ━━━━━━━━━━━━━━━━━━━━ 174s 279ms/step - loss: 0.0238 - val_loss: 0.1289 - learning_rate: 0.0010
+Epoch 11/30
+625/625 ━━━━━━━━━━━━━━━━━━━━ 0s 264ms/step - loss: 0.0224
+Epoch 11: val_loss did not improve from 0.12167
+625/625 ━━━━━━━━━━━━━━━━━━━━ 175s 279ms/step - loss: 0.0224 - val_loss: 0.1386 - learning_rate: 0.0010
+Epoch 12/30
+625/625 ━━━━━━━━━━━━━━━━━━━━ 0s 264ms/step - loss: 0.0247
+Epoch 12: val_loss improved from 0.12167 to 0.10722, saving model to /home/tomi/Documents/Studij/Letnik2/Semester2/pametni-paketnik/ORV/models/triplet_model_best_ep12_loss0.11.keras
+625/625 ━━━━━━━━━━━━━━━━━━━━ 175s 279ms/step - loss: 0.0247 - val_loss: 0.1072 - learning_rate: 0.0010
+Epoch 13/30
+625/625 ━━━━━━━━━━━━━━━━━━━━ 0s 267ms/step - loss: 0.0215
+Epoch 13: val_loss improved from 0.10722 to 0.10685, saving model to /home/tomi/Documents/Studij/Letnik2/Semester2/pametni-paketnik/ORV/models/triplet_model_best_ep13_loss0.11.keras
+625/625 ━━━━━━━━━━━━━━━━━━━━ 176s 282ms/step - loss: 0.0215 - val_loss: 0.1069 - learning_rate: 0.0010
+Epoch 14/30
+625/625 ━━━━━━━━━━━━━━━━━━━━ 0s 267ms/step - loss: 0.0201
+Epoch 14: val_loss did not improve from 0.10685
+625/625 ━━━━━━━━━━━━━━━━━━━━ 176s 282ms/step - loss: 0.0201 - val_loss: 0.1213 - learning_rate: 0.0010
+Epoch 15/30
+625/625 ━━━━━━━━━━━━━━━━━━━━ 0s 264ms/step - loss: 0.0191
+Epoch 15: val_loss improved from 0.10685 to 0.10248, saving model to /home/tomi/Documents/Studij/Letnik2/Semester2/pametni-paketnik/ORV/models/triplet_model_best_ep15_loss0.10.keras
+625/625 ━━━━━━━━━━━━━━━━━━━━ 175s 279ms/step - loss: 0.0191 - val_loss: 0.1025 - learning_rate: 0.0010
+Epoch 16/30
+625/625 ━━━━━━━━━━━━━━━━━━━━ 0s 267ms/step - loss: 0.0195
+Epoch 16: val_loss improved from 0.10248 to 0.10191, saving model to /home/tomi/Documents/Studij/Letnik2/Semester2/pametni-paketnik/ORV/models/triplet_model_best_ep16_loss0.10.keras
+625/625 ━━━━━━━━━━━━━━━━━━━━ 176s 282ms/step - loss: 0.0195 - val_loss: 0.1019 - learning_rate: 0.0010
+Epoch 17/30
+625/625 ━━━━━━━━━━━━━━━━━━━━ 0s 267ms/step - loss: 0.0180
+Epoch 17: val_loss improved from 0.10191 to 0.10187, saving model to /home/tomi/Documents/Studij/Letnik2/Semester2/pametni-paketnik/ORV/models/triplet_model_best_ep17_loss0.10.keras
+625/625 ━━━━━━━━━━━━━━━━━━━━ 176s 282ms/step - loss: 0.0180 - val_loss: 0.1019 - learning_rate: 0.0010
+Epoch 18/30
+625/625 ━━━━━━━━━━━━━━━━━━━━ 0s 267ms/step - loss: 0.0189
+Epoch 18: val_loss did not improve from 0.10187
+625/625 ━━━━━━━━━━━━━━━━━━━━ 176s 282ms/step - loss: 0.0189 - val_loss: 0.1078 - learning_rate: 0.0010
+Epoch 19/30
+625/625 ━━━━━━━━━━━━━━━━━━━━ 0s 265ms/step - loss: 0.0196
+Epoch 19: val_loss improved from 0.10187 to 0.10111, saving model to /home/tomi/Documents/Studij/Letnik2/Semester2/pametni-paketnik/ORV/models/triplet_model_best_ep19_loss0.10.keras
+625/625 ━━━━━━━━━━━━━━━━━━━━ 175s 280ms/step - loss: 0.0196 - val_loss: 0.1011 - learning_rate: 0.0010
+Epoch 20/30
+625/625 ━━━━━━━━━━━━━━━━━━━━ 0s 267ms/step - loss: 0.0200
+Epoch 20: val_loss did not improve from 0.10111
+625/625 ━━━━━━━━━━━━━━━━━━━━ 176s 282ms/step - loss: 0.0200 - val_loss: 0.1060 - learning_rate: 0.0010
+Epoch 21/30
+625/625 ━━━━━━━━━━━━━━━━━━━━ 0s 265ms/step - loss: 0.0198
+Epoch 21: val_loss improved from 0.10111 to 0.08768, saving model to /home/tomi/Documents/Studij/Letnik2/Semester2/pametni-paketnik/ORV/models/triplet_model_best_ep21_loss0.09.keras
+625/625 ━━━━━━━━━━━━━━━━━━━━ 175s 280ms/step - loss: 0.0198 - val_loss: 0.0877 - learning_rate: 0.0010
+Epoch 22/30
+625/625 ━━━━━━━━━━━━━━━━━━━━ 0s 267ms/step - loss: 0.0181
+Epoch 22: val_loss did not improve from 0.08768
+625/625 ━━━━━━━━━━━━━━━━━━━━ 176s 282ms/step - loss: 0.0181 - val_loss: 0.0930 - learning_rate: 0.0010
+Epoch 23/30
+625/625 ━━━━━━━━━━━━━━━━━━━━ 0s 264ms/step - loss: 0.0159
+Epoch 23: val_loss did not improve from 0.08768
+625/625 ━━━━━━━━━━━━━━━━━━━━ 174s 279ms/step - loss: 0.0159 - val_loss: 0.1062 - learning_rate: 0.0010
+Epoch 24/30
+625/625 ━━━━━━━━━━━━━━━━━━━━ 0s 264ms/step - loss: 0.0158
+Epoch 24: val_loss did not improve from 0.08768
+625/625 ━━━━━━━━━━━━━━━━━━━━ 174s 279ms/step - loss: 0.0158 - val_loss: 0.0934 - learning_rate: 0.0010
+Epoch 25/30
+625/625 ━━━━━━━━━━━━━━━━━━━━ 0s 264ms/step - loss: 0.0168
+Epoch 25: val_loss did not improve from 0.08768
+625/625 ━━━━━━━━━━━━━━━━━━━━ 174s 279ms/step - loss: 0.0168 - val_loss: 0.0971 - learning_rate: 0.0010
+Epoch 26/30
+625/625 ━━━━━━━━━━━━━━━━━━━━ 0s 264ms/step - loss: 0.0150
+Epoch 26: val_loss did not improve from 0.08768
+
+Epoch 26: ReduceLROnPlateau reducing learning rate to 0.00020000000949949026.
+625/625 ━━━━━━━━━━━━━━━━━━━━ 174s 279ms/step - loss: 0.0150 - val_loss: 0.0895 - learning_rate: 0.0010
+Epoch 27/30
+625/625 ━━━━━━━━━━━━━━━━━━━━ 0s 265ms/step - loss: 0.0135
+Epoch 27: val_loss improved from 0.08768 to 0.07891, saving model to /home/tomi/Documents/Studij/Letnik2/Semester2/pametni-paketnik/ORV/models/triplet_model_best_ep27_loss0.08.keras
+625/625 ━━━━━━━━━━━━━━━━━━━━ 175s 280ms/step - loss: 0.0135 - val_loss: 0.0789 - learning_rate: 2.0000e-04
+Epoch 28/30
+625/625 ━━━━━━━━━━━━━━━━━━━━ 0s 264ms/step - loss: 0.0111
+Epoch 28: val_loss did not improve from 0.07891
+625/625 ━━━━━━━━━━━━━━━━━━━━ 174s 279ms/step - loss: 0.0111 - val_loss: 0.0810 - learning_rate: 2.0000e-04
+Epoch 29/30
+625/625 ━━━━━━━━━━━━━━━━━━━━ 0s 264ms/step - loss: 0.0113
+Epoch 29: val_loss improved from 0.07891 to 0.07828, saving model to /home/tomi/Documents/Studij/Letnik2/Semester2/pametni-paketnik/ORV/models/triplet_model_best_ep29_loss0.08.keras
+625/625 ━━━━━━━━━━━━━━━━━━━━ 174s 279ms/step - loss: 0.0113 - val_loss: 0.0783 - learning_rate: 2.0000e-04
+Epoch 30/30
+625/625 ━━━━━━━━━━━━━━━━━━━━ 0s 264ms/step - loss: 0.0102
+Epoch 30: val_loss improved from 0.07828 to 0.07295, saving model to /home/tomi/Documents/Studij/Letnik2/Semester2/pametni-paketnik/ORV/models/triplet_model_best_ep30_loss0.07.keras
+625/625 ━━━━━━━━━━━━━━━━━━━━ 174s 279ms/step - loss: 0.0102 - val_loss: 0.0730 - learning_rate: 2.0000e-04
+Restoring model weights from the end of the best epoch: 30.
+
+--- Učenje končano ---
+Končni Embedding model (z najboljšimi utežmi) shranjen v: /home/tomi/Documents/Studij/Letnik2/Semester2/pametni-paketnik/ORV/models/face_embedding_model_dim128.keras
+
+--- Celoten proces učenja zaključen ---
+
+Process finished with exit code 0

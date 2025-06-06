@@ -1,0 +1,8 @@
+opencv-python
+numpy
+tensorflow
+keras-facenet
+albumentations
+Pillow
+scikit-learn # Za kosinusno podobnost
+Flask # Za API, FastAPI

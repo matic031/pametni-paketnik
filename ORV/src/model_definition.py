@@ -1,6 +1,8 @@
 import tensorflow as tf
 from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Input, Conv2D, MaxPooling2D, Flatten, Dense, BatchNormalization, Lambda
+from tensorflow.python.keras.layers import Dropout
+
 from . import config  # Uporabi relativni import
 
 def l2_normalize_layer_func(tensor_input):
@@ -42,6 +44,7 @@ def create_embedding_model(input_shape=(config.IMG_HEIGHT, config.IMG_WIDTH, con
 
     x = Dense(512, activation='relu', name='dense1')(x)
     x = BatchNormalization(name='bn_dense1')(x)
+    #x = Dropout(0.5)(x)  # Dodan dropout za regularizacijo
 
     # Embedding plast - brez aktivacije ali z linearno, nato L2 normalizacija
     embeddings_dense = Dense(embedding_dim, activation=None, name='embedding_dense')(x)

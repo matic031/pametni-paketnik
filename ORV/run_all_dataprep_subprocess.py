@@ -8,7 +8,7 @@ PYTHON_EXECUTABLE = sys.executable  # Pot do Python interpreterja v trenutnem ok
 BASE_SCRIPT_PATH = os.getcwd()  # Trenutna delovna mapa
 
 # Glavno stikalo za celoten cevovod
-APPLY_DENOISING_PIPELINE = True  # True ali False
+APPLY_DENOISING_PIPELINE = False  # True ali False
 
 
 def run_script_with_args(script_name_no_ext, arguments_list=None):

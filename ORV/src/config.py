@@ -13,7 +13,7 @@ os.makedirs(LOG_DIR, exist_ok=True)
 # --- Nastavitve podatkov ---
 # Izberi, kateri dataset uporabiti glede na predhodno denoising nastavitev
 # Spremeni to vrednost na True, če uporabljaš podatke, ki so bili denoised
-DENOISING_WAS_APPLIED = True
+DENOISING_WAS_APPLIED = False
 FINAL_DATASET_FILENAME = f'lfw_final_dataset_denoise-{str(DENOISING_WAS_APPLIED).lower()}.npz'
 FINAL_DATASET_PATH = os.path.join(DATA_DIR, FINAL_DATASET_FILENAME)
 
@@ -24,12 +24,12 @@ IMG_CHANNELS = 3
 
 # --- Nastavitve modela in učenja ---
 EMBEDDING_DIM = 128  # Dimenzionalnost izhodnega embedding vektorja
-TRIPLET_MARGIN = 0.5 # Margin za triplet loss
+TRIPLET_MARGIN = 0.25 # Margin za triplet loss
 
 # --- Hiperparametri učenja ---
-LEARNING_RATE = 0.0001 # Prilagojeno za Adam in triplet loss
+LEARNING_RATE = 0.001 # Prilagojeno za Adam in triplet loss
 BATCH_SIZE = 32
-EPOCHS = 4 # Začni z manjšim številom za testiranje, npr. 10-20, potem povečaj
+EPOCHS = 30 # Začni z manjšim številom za testiranje, npr. 10-20, potem povečaj
 
 # Število trojčkov za generiranje na epoho (za TripletGenerator)
 # Lahko je večje od dejanskega števila slik, saj se trojčki lahko ponavljajo

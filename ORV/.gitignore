@@ -142,3 +142,12 @@ test/
 models/
 
 logs/
+
+requirements
+main_test_script.py
+app.py
+user_management/
+test_images/
+models_data/
+face_processing/
+data_storage/
