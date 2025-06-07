@@ -31,14 +31,35 @@ services:
       DB_MONGO_PORT: 27017
       PORT: 3000
       JWT_SECRET: ${JWT_SECRET:-pametni_paketnik_secure_jwt_key}
+      FACE_API_URL: http://face_recognition:5000
     ports:
       - "3000:3000"
     depends_on:
       - mongo_db
+      - face_recognition
     networks:
       - app-network
     env_file:
       - ./backend/.env
+
+  face_recognition:
+    build:
+      context: ../ORV
+      dockerfile: Dockerfile
+    container_name: pametni_paketnik_face_recognition
+    restart: always
+    ports:
+      - "5000:5000"
+    volumes:
+      - ../ORV/model:/app/model:ro
+      - face_data:/app/user_management
+    networks:
+      - app-network
+    environment:
+      - PYTHONPATH=/app
+      - TF_CPP_MIN_LOG_LEVEL=2
+      - CUDA_VISIBLE_DEVICES=""
+      - TF_FORCE_GPU_ALLOW_GROWTH=true
 
   frontend:
     build:
@@ -65,3 +86,4 @@ networks:
 
 volumes:
   mongo_data:
+  face_data:
