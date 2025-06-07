@@ -9,73 +9,64 @@ const JWT_SECRET = process.env.JWT_SECRET || 'pametni_paketnik_secret_key';
 const authController = {
     register: async (req, res) => {
         try {
-            console.log('Registration request received:', req.body);
-
             const { username, email, password, name, lastName } = req.body;
 
             if (!username || !email || !password) {
-                console.log('Missing required fields');
                 return res.status(400).json({
                     success: false,
-                    message: 'Manjkajo zahtevana polja: uporabniško ime, e-pošta in geslo so obvezni'
+                    message: 'Required fields missing'
                 });
             }
 
-            console.log('Checking if user already exists...');
             const existingUser = await User.findOne({
                 $or: [{ email }, { username }]
             });
 
             if (existingUser) {
-                console.log('User already exists');
-                return res.status(400).json({
+                return res.status(409).json({
                     success: false,
-                    message: 'Uporabnik s tem e-poštnim naslovom ali uporabniškim imenom že obstaja'
+                    message: 'User already exists'
                 });
             }
 
-            console.log('Creating new user...');
             const newUser = new User({
                 username,
                 email,
                 password,
-                name: name || '',
-                lastName: lastName || ''
+                name,
+                lastName
             });
 
-            console.log('Saving user to database...');
+            let savedUser;
             try {
-                await newUser.save();
-                console.log('User saved successfully');
+                console.log('Attempting to save user...');
+                savedUser = await newUser.save();
+                console.log('User saved with ID:', savedUser._id);
             } catch (saveError) {
-                console.error('Error saving user:', saveError);
-                return res.status(500).json({
-                    success: false,
-                    message: 'Napaka pri shranjevanju uporabnika',
-                    error: saveError.message
-                });
+                console.error('Save error:', saveError);
+                throw new Error(`Failed to save user: ${saveError.message}`);
             }
 
             const userToReturn = {
-                id: newUser._id,
-                username: newUser.username,
-                email: newUser.email,
-                name: newUser.name,
-                lastName: newUser.lastName
+                id: savedUser._id,
+                username: savedUser.username,
+                email: savedUser.email,
+                name: savedUser.name,
+                lastName: savedUser.lastName
             };
 
             return res.status(201).json({
                 success: true,
-                message: 'Uporabnik uspešno registriran',
+                message: 'User registered successfully',
                 user: userToReturn
             });
+
         } catch (error) {
-            console.error('Error in registration:', error);
+            console.error('Registration error:', error);
             return res.status(500).json({
                 success: false,
-                message: 'Napaka pri registraciji uporabnika',
-                error: error.message,
-                stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+                message: 'Registration failed',
+                error: error.message
             });
         }
     },
