@@ -3,10 +3,6 @@ import sys
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 import numpy as np
-import json
-import base64
-from io import BytesIO
-from PIL import Image
 import cv2
 
 sys.path.append(os.path.join(os.path.dirname(__file__)))
@@ -246,72 +242,6 @@ def verify_user_face():
         )
 
 
-@app.route("/verify_base64", methods=["POST"])
-def verify_user_face_base64():
-    """
-    Verify user with face image sent as base64
-    Expects: user_id and base64_image
-    """
-    try:
-        data = request.get_json()
-
-        user_id = data.get("user_id")
-        base64_image = data.get("base64_image")
-
-        if not user_id or not base64_image:
-            return (
-                jsonify(
-                    {
-                        "success": False,
-                        "message": "user_id and base64_image are required",
-                    }
-                ),
-                400,
-            )
-
-        if not is_user_registered(user_id):
-            return jsonify({"success": False, "message": "User not registered"}), 404
-
-        try:
-            if "," in base64_image:
-                base64_image = base64_image.split(",")[1]
-
-            image_bytes = base64.b64decode(base64_image)
-        except Exception as e:
-            return (
-                jsonify({"success": False, "message": "Invalid base64 image format"}),
-                400,
-            )
-
-        embedding = get_embedding_from_image_bytes(image_bytes)
-        if embedding is None:
-            return (
-                jsonify({"success": False, "message": "No face detected in image"}),
-                400,
-            )
-
-        is_verified, similarity_score = verify_user_by_embedding(user_id, embedding[0])
-
-        return jsonify(
-            {
-                "success": True,
-                "verified": is_verified,
-                "similarity_score": float(similarity_score),
-                "threshold": VERIFICATION_THRESHOLD,
-                "message": (
-                    "Verification successful" if is_verified else "Verification failed"
-                ),
-            }
-        )
-
-    except Exception as e:
-        print(f"Base64 verification error: {e}")
-        return (
-            jsonify({"success": False, "message": f"Verification failed: {str(e)}"}),
-            500,
-        )
-
-
 @app.route("/user/<user_id>", methods=["GET"])
 def get_user_info(user_id):
     """Get user registration status"""
@@ -355,7 +285,6 @@ def index():
             "endpoints": {
                 "POST /register": "Register user with face image (multipart/form-data: user_id, image)",
                 "POST /verify": "Verify user with face image (multipart/form-data: user_id, image)",
-                "POST /verify_base64": "Verify user with base64 image (JSON: user_id, base64_image)",
                 "GET /user/<user_id>": "Get user registration status",
                 "DELETE /user/<user_id>": "Delete user registration",
                 "GET /health": "Health check",
@@ -369,7 +298,6 @@ if __name__ == "__main__":
     print("Available endpoints:")
     print("  POST /register - Register user with face")
     print("  POST /verify - Verify user with face")
-    print("  POST /verify_base64 - Verify user with base64 image")
     print("  GET /user/<user_id> - Get user status")
     print("  DELETE /user/<user_id> - Delete user")
     print("  GET /health - Health check")

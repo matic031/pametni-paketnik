@@ -10,7 +10,4 @@ router.delete('/delete', auth, faceController.deleteFace);
 
 router.post('/verify', upload.single('image'), faceController.verifyFace);
 
-// za slike iz kamere
-router.post('/verify-base64', faceController.verifyFaceBase64);
-
 module.exports = router;
