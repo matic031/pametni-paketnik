@@ -1,5 +1,6 @@
 package com.example.pametnipaketnik.network
 
+import android.content.Context
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -8,20 +9,32 @@ import retrofit2.converter.gson.GsonConverterFactory
 object RetrofitInstance {
     private const val BASE_URL = "http://10.0.2.2:3000/" // Prilagoid
 
-    private val loggingInterceptor = HttpLoggingInterceptor().apply {
-        level = HttpLoggingInterceptor.Level.BODY // Prikazuje celotno telo zahteve/odgovora
-    }
+    private var apiService: ApiService? = null
 
-    private val httpClient = OkHttpClient.Builder()
-        .addInterceptor(loggingInterceptor) // Dodajanje interceptorja za logiranje
-        .build()
+    fun getApiService(context: Context): ApiService {
+        if (apiService == null) {
+            // Interceptor za logiranje
+            val loggingInterceptor = HttpLoggingInterceptor().apply {
+                level = HttpLoggingInterceptor.Level.BODY
+            }
 
-    val api: ApiService by lazy {
-        Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .client(httpClient) // Uporaba našega OkHttpClient z logiranjem
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-            .create(ApiService::class.java)
+            val authInterceptor = AuthInterceptor(context.applicationContext)
+
+            // Sestavimo OkHttpClient z obema interceptorjema
+            val okHttpClient = OkHttpClient.Builder()
+                .addInterceptor(loggingInterceptor)
+                .addInterceptor(authInterceptor) // Dodamo auth interceptor
+                .build()
+
+            // Sestavimo Retrofit
+            val retrofit = Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .client(okHttpClient) // Uporabimo novi client
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+
+            apiService = retrofit.create(ApiService::class.java)
+        }
+        return apiService!!
     }
 }

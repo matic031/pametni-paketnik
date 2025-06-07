@@ -1,5 +1,6 @@
 package com.example.pametnipaketnik.ui.profile
 
+import com.example.pametnipaketnik.data.TokenManager
 import android.app.Application
 import android.content.Context
 import androidx.lifecycle.AndroidViewModel
@@ -27,22 +28,13 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     private val logoutCompleteMutable = MutableLiveData<Boolean>()
     val logoutComplete: LiveData<Boolean> = logoutCompleteMutable
 
-    // SharedPreferences za dostop do žetona
-    private val sharedPreferences = application.getSharedPreferences("PAMETNI_PAKETNIK_PREFS", Context.MODE_PRIVATE)
 
     fun fetchUserProfile() {
         userProfileDataMutable.value = ProfileDataResult.Loading
-        val token = sharedPreferences.getString("AUTH_TOKEN", null)
-
-        if (token == null) {
-            userProfileDataMutable.value = ProfileDataResult.Error("Uporabnik ni prijavljen (ni žetona).")
-            logoutCompleteMutable.value = true // Sproži odjavo, če ni žetona
-            return
-        }
 
         viewModelScope.launch {
             try {
-                val response = RetrofitInstance.api.getCurrentUserProfile(token) // Pošljemo žeton v glavi
+                val response = RetrofitInstance.getApiService(getApplication()).getCurrentUserProfile() // Pošljemo žeton v glavi
                 if (response.isSuccessful && response.body() != null) {
                     val profileResponse = response.body()!!
                     if (profileResponse.success) {
@@ -73,10 +65,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     }
 
     fun performLogout() {
-        with(sharedPreferences.edit()) {
-            remove("AUTH_TOKEN")
-            apply()
-        }
+        TokenManager.clearToken(getApplication())
         logoutCompleteMutable.value = true
     }
 

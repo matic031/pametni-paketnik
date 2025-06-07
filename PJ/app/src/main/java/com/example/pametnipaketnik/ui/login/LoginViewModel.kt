@@ -1,5 +1,7 @@
 package com.example.pametnipaketnik.ui.login
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -18,7 +20,7 @@ sealed class LoginResult {
     object Loading : LoginResult()
 }
 
-class LoginViewModel : ViewModel() {
+class LoginViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _loginResult = MutableLiveData<LoginResult>()
     val loginResult: LiveData<LoginResult> = _loginResult
@@ -33,7 +35,7 @@ class LoginViewModel : ViewModel() {
 
         viewModelScope.launch {
             try {
-                val response = RetrofitInstance.api.loginUser(LoginRequest(username, password))
+                val response = RetrofitInstance.getApiService(getApplication()).loginUser(LoginRequest(username, password))
 
                 if (response.isSuccessful && response.body() != null) {
                     val loginResponse = response.body()!!

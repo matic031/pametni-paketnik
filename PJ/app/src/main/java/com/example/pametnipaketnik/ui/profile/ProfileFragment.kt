@@ -84,7 +84,6 @@ class ProfileFragment : Fragment() {
         binding.textViewWelcomeMessage.visibility = visibility
         // binding.textViewLoginSubtitle.visibility = visibility // Ta je bil odstranjen iz XML-a
         binding.cardMojiPodatki.visibility = visibility
-        // Če želite skriti/prikazati tudi gumb za odjavo med nalaganjem, ga dodajte sem:
         // binding.buttonLogoutProfile.visibility = visibility
     }
 
