@@ -28,42 +28,45 @@ const UserSchema = new Schema({
     isAdmin: {
         type: Boolean,
         default: false
+    },
+    faceRegistered: {
+        type: Boolean,
+        default: false
+    },
+    faceRegisteredAt: {
+        type: Date,
+        default: null
+    },
+    lastFaceVerification: {
+        type: Date,
+        default: null
     }
 }, {
     timestamps: true
 });
 
 UserSchema.pre('save', async function (next) {
-    if (!this.isModified('password')) return next();
-
     try {
-        console.log('Attempting to hash password...');
+        if (!this.isModified('password')) {
+            return next();
+        }
 
-        this.password = `SECURE_${this.password}`;
-        console.log('Password processed successfully (fallback method)');
+        const salt = bcrypt.genSaltSync(10);
 
-        next();
+        this.password = bcrypt.hashSync(this.password, salt);
+
+        return next();
     } catch (error) {
-        console.error('Error in password processing:', error);
-        next(error);
+        console.error('Password hashing error:', error);
+        return next(error);
     }
 });
 
 UserSchema.methods.comparePassword = async function (candidatePassword) {
     try {
-        if (this.password.startsWith('SECURE_')) {
-            const storedPassword = this.password.substring(7);
-            return candidatePassword === storedPassword;
-        }
-
-        try {
-            return await bcrypt.compare(candidatePassword, this.password);
-        } catch (err) {
-            console.error('Bcrypt comparison failed, falling back to direct comparison');
-            return candidatePassword === this.password;
-        }
+        return await bcrypt.compare(candidatePassword, this.password);
     } catch (error) {
-        console.error('Error comparing passwords:', error);
+        console.error('Password comparison error:', error);
         return false;
     }
 };

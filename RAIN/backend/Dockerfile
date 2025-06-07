@@ -1,19 +1,16 @@
 FROM node:18-alpine
 
-RUN apk add --no-cache python3 make g++ python3-dev
+RUN apk add --no-cache python3 make g++ gcc
 
 WORKDIR /app
 
 COPY package*.json ./
 
-RUN npm install --verbose
+RUN npm install bcrypt --build-from-source
+RUN npm install
 
 COPY . .
 
-ENV NODE_ENV=development
-
-ENV NODE_OPTIONS="--max-old-space-size=512"
-
 EXPOSE 3000
 
-CMD ["node", "--trace-warnings", "./bin/www"]
+CMD ["node", "./bin/www"]

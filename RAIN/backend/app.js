@@ -12,7 +12,8 @@ const mongoose = require('mongoose');
 // Import routes
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
-const authRouter = require('./routes/auth'); // Add auth routes
+const authRouter = require('./routes/auth');
+const faceRouter = require('./routes/face');
 
 // Initialize Express app
 const app = express();
@@ -43,7 +44,9 @@ app.use(cors({
   origin: ['http://localhost:8080', 'http://localhost:5173'],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  preflightContinue: false,
+  optionsSuccessStatus: 200
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -52,7 +55,8 @@ app.use(cookieParser());
 // Routes
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-app.use('/auth', authRouter); // Add auth routes
+app.use('/auth', authRouter);
+app.use('/face', faceRouter);
 
 // Catch 404 and forward to error handler
 app.use(function (req, res, next) {
