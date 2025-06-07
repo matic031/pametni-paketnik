@@ -4,6 +4,7 @@ import sys
 import numpy as np
 import tensorflow as tf
 import cv2
+from typing import Union, Optional
 
 # --- Nastavitev poti za pravilne importe ---
 # Skripta predpostavlja, da se nahaja v korenu projekta (ORV/).
@@ -94,7 +95,7 @@ def _detect_and_crop_face(image_np_uint8):
 
 # --- GLAVNA FUNKCIJA ZA UPORABO V API-ju ---
 
-def get_embedding_from_image_bytes(image_bytes: bytes) -> np.ndarray | None:
+def get_embedding_from_image_bytes(image_bytes: bytes) -> Optional[np.ndarray]:
     """
     Glavna funkcija. Sprejme sliko v obliki bajtov, vrne 128-dimenzionalni embedding.
 
