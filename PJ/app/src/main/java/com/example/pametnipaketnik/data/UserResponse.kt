@@ -5,6 +5,7 @@ data class UserResponse(
     val username: String,
     val email: String,
     val name: String?,
-    val lastName: String?
-    // val isAdmin: Boolean
+    val lastName: String?,
+    val isAdmin: Boolean,
+    val faceRegistered: Boolean
 )
