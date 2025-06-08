@@ -3,6 +3,7 @@ package com.example.pametnipaketnik.ui.home
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,23 +11,74 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import com.example.pametnipaketnik.LoginActivity
 import com.example.pametnipaketnik.OpenBoxRepository
 import com.example.pametnipaketnik.QrScanActivity
 import com.example.pametnipaketnik.databinding.FragmentHomeBinding
-import androidx.lifecycle.lifecycleScope
+import com.example.pametnipaketnik.network.RetrofitInstance
 import kotlinx.coroutines.launch
 
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
-
     private val binding get() = _binding!!
+    private val TAG = "HomeFragment"
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        Log.d(TAG, "onCreateView: Checking authentication")
+
+        if (!RetrofitInstance.AuthManager.isLoggedIn(requireContext())) {
+            Log.d(TAG, "onCreateView: User not logged in, redirecting to login")
+            navigateToLogin()
+            return View(requireContext())
+        }
+
+        val homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
+        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        val root: View = binding.root
+
+        val textView: TextView = binding.textHome
+        homeViewModel.text.observe(viewLifecycleOwner) {
+            textView.text = it
+        }
+        return root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (!RetrofitInstance.AuthManager.isLoggedIn(requireContext())) {
+            Log.d(TAG, "onResume: User not logged in, redirecting to login")
+            navigateToLogin()
+            return
+        }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        if (!RetrofitInstance.AuthManager.isLoggedIn(requireContext())) {
+            Log.d(TAG, "onViewCreated: User not logged in, redirecting to login")
+            navigateToLogin()
+            return
+        }
+
         binding.buttonScanQr.setOnClickListener {
             val intent = Intent(requireContext(), QrScanActivity::class.java)
             startActivityForResult(intent, 1001)
+        }
+    }
+
+    private fun navigateToLogin() {
+        activity?.let {
+            val intent = Intent(it, LoginActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            it.startActivity(intent)
+            it.finish()
         }
     }
 
@@ -38,31 +90,13 @@ class HomeFragment : Fragment() {
             if (boxId != null) {
                 Toast.makeText(requireContext(), "Playing token", Toast.LENGTH_SHORT).show()
                 viewLifecycleOwner.lifecycleScope.launch {
-                    android.util.Log.d("HomeFragment", "Loaded box with ID: $boxId")
+                    Log.d("HomeFragment", "Loaded box with ID: $boxId")
                     OpenBoxRepository.openBoxAndPlayToken(requireContext(), boxId, 2)
                 }
             } else {
                 Toast.makeText(requireContext(), "QR code does not contain a valid box ID: $boxIdStr", Toast.LENGTH_SHORT).show()
             }
         }
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        val homeViewModel =
-            ViewModelProvider(this).get(HomeViewModel::class.java)
-
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        val root: View = binding.root
-
-        val textView: TextView = binding.textHome
-        homeViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
-        }
-        return root
     }
 
     override fun onDestroyView() {
