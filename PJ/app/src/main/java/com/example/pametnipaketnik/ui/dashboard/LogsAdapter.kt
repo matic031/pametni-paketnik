@@ -40,11 +40,11 @@ class LogsAdapter(private var logs: List<LogEntry>) : RecyclerView.Adapter<LogsA
             if (log.status.equals("SUCCESS", ignoreCase = true)) {
                 textLogStatus.text = "SUCCESS"
                 textLogStatus.setTextColor(ContextCompat.getColor(context, R.color.status_success))
-                //iconStatus.setImageResource(R.drawable.ic_success)
+                iconStatus.setImageResource(R.drawable.ic_done_green_24dp)
             } else {
                 textLogStatus.text = "FAILURE"
                 textLogStatus.setTextColor(ContextCompat.getColor(context, R.color.status_failure))
-                //iconStatus.setImageResource(R.drawable.ic_failure)
+                iconStatus.setImageResource(R.drawable.ic_close_red_24dp)
             }
         }
     }
