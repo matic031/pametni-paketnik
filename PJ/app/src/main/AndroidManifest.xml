@@ -25,6 +25,10 @@
         <activity android:name=".QrScanActivity" />
 
         <activity
+            android:name=".RegisterActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".LoginActivity"
             android:exported="true"
             android:label="@string/title_activity_login">
@@ -33,6 +37,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".FaceRegistrationActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".FaceVerificationActivity"
+            android:exported="false" />
 
         <activity
             android:name=".MainActivity"
