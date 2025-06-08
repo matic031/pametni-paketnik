@@ -40,33 +40,11 @@ class LoginActivity : AppCompatActivity() {
         }
 
         binding.textViewRegisterLink.setOnClickListener {
-            val registerUrl = "http://10.0.2.2:8080/register" // URL za registracijo
-
-            val finalUrl = if (isEmulator()) {
-                registerUrl.replace("localhost", "10.0.2.2")
-            } else {
-                registerUrl
-            }
-
-            try {
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(finalUrl))
-                startActivity(intent)
-            } catch (e: Exception) {
-                // V primeru, da ni nameščenega brskalnika ali pride do druge napake
-                Toast.makeText(this, "Ne morem odpreti povezave za registracijo.", Toast.LENGTH_SHORT).show()
-                e.printStackTrace()
-            }
+            val intent = Intent(this, RegisterActivity::class.java)
+            startActivity(intent)
         }
 
         observeViewModel()
-    }
-
-    private fun isEmulator(): Boolean {
-        return android.os.Build.MODEL.contains("sdk", ignoreCase = true) ||
-                android.os.Build.MODEL.contains("emulator", ignoreCase = true) ||
-                android.os.Build.PRODUCT.contains("sdk", ignoreCase = true) ||
-                android.os.Build.HARDWARE.contains("goldfish", ignoreCase = true) ||
-                android.os.Build.HARDWARE.contains("ranchu", ignoreCase = true)
     }
 
     private fun checkIfUserIsLoggedIn() {
