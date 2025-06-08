@@ -1,4 +1,4 @@
-package com.example.pametnipaketnik.ui.profile // Prilagodite paket
+package com.example.pametnipaketnik.ui.profile
 
 import android.content.Context
 import android.content.Intent
@@ -8,12 +8,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.fragment.app.viewModels // Za by viewModels()
-import androidx.navigation.fragment.findNavController
+import androidx.fragment.app.viewModels
+import com.example.pametnipaketnik.FaceRegistrationActivity
 import com.example.pametnipaketnik.LoginActivity
-import com.example.pametnipaketnik.R
 import com.example.pametnipaketnik.databinding.FragmentProfileBinding
-
 
 class ProfileFragment : Fragment() {
 
@@ -39,6 +37,10 @@ class ProfileFragment : Fragment() {
             profileViewModel.performLogout()
         }
 
+        binding.buttonRegisterFace.setOnClickListener {
+            navigateToFaceRegistration()
+        }
+
         observeViewModel()
     }
 
@@ -55,12 +57,13 @@ class ProfileFragment : Fragment() {
                     binding.textViewProfileError.visibility = View.GONE
                     setProfileDataVisibility(View.VISIBLE)
                     result.userProfile.user.let { user ->
-
                         binding.textViewWelcomeMessage.text = "Dobrodošli, ${user.name ?: user.username}!"
                         binding.textViewUsername.text = user.username
                         binding.textViewEmail.text = user.email
                         binding.textViewName.text = user.name ?: "-"
                         binding.textViewLastName.text = user.lastName ?: "-"
+
+                        binding.buttonRegisterFace.visibility = if (user.faceRegistered) View.GONE else View.VISIBLE
                     }
                 }
                 is ProfileDataResult.Error -> {
@@ -78,11 +81,17 @@ class ProfileFragment : Fragment() {
                 profileViewModel.onLogoutNavigated() // Ponastavi stanje
             }
         }
+
+        profileViewModel.showFaceRegistration.observe(viewLifecycleOwner) { showRegistration ->
+            if (showRegistration) {
+                navigateToFaceRegistration()
+                profileViewModel.onFaceRegistrationNavigated()
+            }
+        }
     }
 
     private fun setProfileDataVisibility(visibility: Int) {
         binding.textViewWelcomeMessage.visibility = visibility
-        // binding.textViewLoginSubtitle.visibility = visibility // Ta je bil odstranjen iz XML-a
         binding.cardMojiPodatki.visibility = visibility
         // binding.buttonLogoutProfile.visibility = visibility
     }
@@ -95,6 +104,13 @@ class ProfileFragment : Fragment() {
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
         activity?.finish() // Zapre MainActivity (ali katero koli gostiteljsko aktivnost)
+    }
+
+    private fun navigateToFaceRegistration() {
+        if (activity == null || !isAdded) return
+
+        val intent = Intent(activity, FaceRegistrationActivity::class.java)
+        startActivity(intent)
     }
 
     override fun onDestroyView() {

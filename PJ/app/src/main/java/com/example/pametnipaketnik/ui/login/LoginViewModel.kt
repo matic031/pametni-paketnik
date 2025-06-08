@@ -6,18 +6,17 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.pametnipaketnik.data.ApiErrorResponse
 import com.example.pametnipaketnik.data.LoginRequest
 import com.example.pametnipaketnik.data.LoginResponse
 import com.example.pametnipaketnik.network.RetrofitInstance
 import com.google.gson.Gson
 import kotlinx.coroutines.launch
-import com.example.pametnipaketnik.data.ApiErrorResponse
-
 
 sealed class LoginResult {
-    data class Success(val response: LoginResponse) : LoginResult() // Vrača celoten LoginResponse
-    data class Error(val message: String) : LoginResult()
     object Loading : LoginResult()
+    data class Success(val response: LoginResponse) : LoginResult()
+    data class Error(val message: String) : LoginResult()
 }
 
 class LoginViewModel(application: Application) : AndroidViewModel(application) {
@@ -26,42 +25,40 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
     val loginResult: LiveData<LoginResult> = _loginResult
 
     fun loginUser(username: String, password: String) {
-        if (username.isBlank() || password.isBlank()) {
-            _loginResult.value = LoginResult.Error("Uporabniško ime in geslo ne smeta biti prazna.")
+        if (username.isEmpty() || password.isEmpty()) {
+            _loginResult.value = LoginResult.Error("Username and password are required")
             return
         }
 
         _loginResult.value = LoginResult.Loading
-
         viewModelScope.launch {
             try {
+                val loginRequest = LoginRequest(username, password)
                 val response = RetrofitInstance.getApiService(getApplication()).loginUser(LoginRequest(username, password))
 
                 if (response.isSuccessful && response.body() != null) {
                     val loginResponse = response.body()!!
-                    if (loginResponse.success) { // Dodatno preverjanje polja "success" iz vašega API-ja
+                    if (loginResponse.success) {
                         _loginResult.value = LoginResult.Success(loginResponse)
                     } else {
-                        // Če API vrne 200 OK, ampak success=false
-                        _loginResult.value = LoginResult.Error(loginResponse.message ?: "Neznana napaka s strežnika.")
+                        _loginResult.value = LoginResult.Error(loginResponse.message ?: "Unknown login error")
                     }
                 } else {
                     val errorBody = response.errorBody()?.string()
-                    var errorMessage = "Neznana napaka pri prijavi (Koda: ${response.code()})"
-                    if (errorBody != null) {
+                    val errorMessage = if (errorBody != null) {
                         try {
-                            // Poskusimo razčleniti kot ApiErrorResponse
                             val apiError = Gson().fromJson(errorBody, ApiErrorResponse::class.java)
-                            errorMessage = apiError.message ?: apiError.errorDetails ?: "Napaka s strežnika (Koda: ${response.code()})."
+                            apiError.message ?: "Login failed"
                         } catch (e: Exception) {
-                            // Ni uspelo razčleniti, morda je samo string
-                            errorMessage = "Napaka: $errorBody (Koda: ${response.code()})"
+                            "Error: $errorBody"
                         }
+                    } else {
+                        "Login failed with code: ${response.code()}"
                     }
                     _loginResult.value = LoginResult.Error(errorMessage)
                 }
             } catch (e: Exception) {
-                _loginResult.value = LoginResult.Error("Napaka pri povezavi: ${e.localizedMessage ?: e.message}")
+                _loginResult.value = LoginResult.Error("Network error: ${e.message}")
             }
         }
     }

@@ -3,6 +3,7 @@ package com.example.pametnipaketnik.ui.profile
 import com.example.pametnipaketnik.data.TokenManager
 import android.app.Application
 import android.content.Context
+import android.content.Intent
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -28,6 +29,11 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     private val logoutCompleteMutable = MutableLiveData<Boolean>()
     val logoutComplete: LiveData<Boolean> = logoutCompleteMutable
 
+    private val _showFaceRegistrationMutable = MutableLiveData<Boolean>()
+    val showFaceRegistration: LiveData<Boolean> = _showFaceRegistrationMutable
+
+    // SharedPreferences za dostop do žetona
+    private val sharedPreferences = application.getSharedPreferences("PAMETNI_PAKETNIK_PREFS", Context.MODE_PRIVATE)
 
     fun fetchUserProfile() {
         userProfileDataMutable.value = ProfileDataResult.Loading
@@ -39,6 +45,10 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
                     val profileResponse = response.body()!!
                     if (profileResponse.success) {
                         userProfileDataMutable.value = ProfileDataResult.Success(profileResponse)
+
+                        if (!profileResponse.user.faceRegistered) {
+                            _showFaceRegistrationMutable.value = true
+                        }
                     } else {
                         userProfileDataMutable.value = ProfileDataResult.Error(profileResponse.user.toString() ?: "Napaka pri pridobivanju profila s strežnika.")
                     }
@@ -71,5 +81,9 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
 
     fun onLogoutNavigated() {
         logoutCompleteMutable.value = false // Ponastavi stanje po navigaciji
+    }
+
+    fun onFaceRegistrationNavigated() {
+        _showFaceRegistrationMutable.value = false
     }
 }
