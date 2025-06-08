@@ -12,8 +12,11 @@ const mongoose = require('mongoose');
 // Import routes
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
-const authRouter = require('./routes/auth');
+
+const authRouter = require('./routes/auth'); // Add auth routes
+const logsRouter = require('./routes/logs');
 const faceRouter = require('./routes/face');
+
 
 // Initialize Express app
 const app = express();
@@ -55,7 +58,8 @@ app.use(cookieParser());
 // Routes
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-app.use('/auth', authRouter);
+app.use('/auth', authRouter); // Add auth routes
+app.use('/api/logs', logsRouter);
 app.use('/face', faceRouter);
 
 // Catch 404 and forward to error handler

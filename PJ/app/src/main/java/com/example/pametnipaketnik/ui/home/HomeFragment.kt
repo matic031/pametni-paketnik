@@ -39,7 +39,7 @@ class HomeFragment : Fragment() {
                 Toast.makeText(requireContext(), "Playing token", Toast.LENGTH_SHORT).show()
                 viewLifecycleOwner.lifecycleScope.launch {
                     android.util.Log.d("HomeFragment", "Loaded box with ID: $boxId")
-                    OpenBoxRepository.openBoxAndPlayToken(requireContext(), boxId, 2)
+                    OpenBoxRepository.openBoxAndLog(requireContext(), boxId, 2)
                 }
             } else {
                 Toast.makeText(requireContext(), "QR code does not contain a valid box ID: $boxIdStr", Toast.LENGTH_SHORT).show()

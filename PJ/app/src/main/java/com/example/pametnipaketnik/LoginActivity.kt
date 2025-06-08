@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.pametnipaketnik.MainActivity
+import com.example.pametnipaketnik.data.TokenManager
 import com.example.pametnipaketnik.databinding.ActivityLoginBinding
 import com.example.pametnipaketnik.ui.login.LoginResult
 import com.example.pametnipaketnik.ui.login.LoginViewModel
@@ -20,6 +21,11 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        if (isUserLoggedIn()) {
+            navigateToMainActivity()
+            return
+        }
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -34,7 +40,7 @@ class LoginActivity : AppCompatActivity() {
         }
 
         binding.textViewRegisterLink.setOnClickListener{
-            val registerUrl = "http://10.0.2.2:5173/register" // URL za registracij0
+            val registerUrl = "http://10.0.2.2:8080/register" // URL za registracij0
 
             val finalUrl = if (isEmulator()) {
                 registerUrl.replace("localhost", "10.0.2.2")
@@ -74,6 +80,10 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    private fun isUserLoggedIn(): Boolean {
+        return TokenManager.getToken(this) != null
+    }
+
     private fun observeViewModel() {
         loginViewModel.loginResult.observe(this) { result ->
             when (result) {
@@ -89,9 +99,8 @@ class LoginActivity : AppCompatActivity() {
                     // Uporabimo sporočilo iz API odgovora, če obstaja
                     Toast.makeText(this, result.response.message ?: "Prijava uspešna!", Toast.LENGTH_LONG).show()
 
-                    val tokenToSave = result.response.token // Shranimo celoten "Bearer <token>"
-                    // val tokenToSave = result.response.token.removePrefix("Bearer ").trim()
-                    saveAuthToken(tokenToSave)
+                    // Shranimo žeton v TokenManager
+                    TokenManager.saveToken(this, result.response.token)
 
                     navigateToMainActivity()
                 }
@@ -106,14 +115,6 @@ class LoginActivity : AppCompatActivity() {
                     binding.editTextUsername.requestFocus()
                 }
             }
-        }
-    }
-
-    private fun saveAuthToken(token: String) {
-        val sharedPreferences = getSharedPreferences("PAMETNI_PAKETNIK_PREFS", Context.MODE_PRIVATE)
-        with(sharedPreferences.edit()) {
-            putString("AUTH_TOKEN", token) // Shranjujemo celoten "Bearer <token>"
-            apply()
         }
     }
 
