@@ -113,12 +113,6 @@ class FaceVerificationActivity : AppCompatActivity() {
                     binding.buttonCapture.visibility = View.VISIBLE
                     binding.buttonPickImage.visibility = View.VISIBLE
                     if (result.response.verified) {
-                        val sharedPreferences = getSharedPreferences("PAMETNI_PAKETNIK_PREFS", Context.MODE_PRIVATE)
-                        with(sharedPreferences.edit()) {
-                            putBoolean("FACE_VERIFIED", true)
-                            apply()
-                        }
-
                         Toast.makeText(this, "Face verification successful", Toast.LENGTH_LONG).show()
                         navigateToMainActivity()
                     } else {

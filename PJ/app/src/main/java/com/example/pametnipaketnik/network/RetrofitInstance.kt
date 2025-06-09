@@ -73,37 +73,12 @@ object RetrofitInstance {
             currentActivity = activity
         }
 
-        fun needsFaceRegistration(context: Context): Boolean {
-            val sharedPreferences = context.getSharedPreferences("PAMETNI_PAKETNIK_PREFS", Context.MODE_PRIVATE)
-            val token = sharedPreferences.getString("AUTH_TOKEN", null)
-            val faceRegistered = sharedPreferences.getBoolean("FACE_REGISTERED", false)
-
-            return !token.isNullOrEmpty() && !faceRegistered
-        }
-
-        fun hasTokenButNeedsFaceVerification(context: Context): Boolean {
-            val sharedPreferences = context.getSharedPreferences("PAMETNI_PAKETNIK_PREFS", Context.MODE_PRIVATE)
-            val token = sharedPreferences.getString("AUTH_TOKEN", null)
-            val faceRegistered = sharedPreferences.getBoolean("FACE_REGISTERED", false)
-            val faceVerified = sharedPreferences.getBoolean("FACE_VERIFIED", false)
-
-            return !token.isNullOrEmpty() && faceRegistered && !faceVerified
-        }
-
         fun syncUserStatus(context: Context, faceRegistered: Boolean) {
             val sharedPreferences = context.getSharedPreferences("PAMETNI_PAKETNIK_PREFS", Context.MODE_PRIVATE)
             with(sharedPreferences.edit()) {
                 putBoolean("FACE_REGISTERED", faceRegistered)
                 apply()
             }
-        }
-
-        fun isLoggedIn(context: Context): Boolean {
-            val sharedPreferences = context.getSharedPreferences("PAMETNI_PAKETNIK_PREFS", Context.MODE_PRIVATE)
-            val token = sharedPreferences.getString("AUTH_TOKEN", null)
-            val faceVerified = sharedPreferences.getBoolean("FACE_VERIFIED", false)
-
-            return !token.isNullOrEmpty() && faceVerified
         }
 
         fun handleAuthFailure() {
@@ -123,17 +98,5 @@ object RetrofitInstance {
             }
         }
 
-        fun logout(context: Context) {
-            val sharedPreferences = context.getSharedPreferences("PAMETNI_PAKETNIK_PREFS", Context.MODE_PRIVATE)
-            with(sharedPreferences.edit()) {
-                remove("AUTH_TOKEN")
-                remove("FACE_VERIFIED")
-                apply()
-            }
-
-            val intent = Intent(context, LoginActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            context.startActivity(intent)
-        }
     }
 }

@@ -7,5 +7,6 @@ data class UserResponse(
     val name: String?,
     val lastName: String?,
     val isAdmin: Boolean,
-    val faceRegistered: Boolean
+    val faceRegistered: Boolean,
+    val lastFaceVerification: String?
 )

@@ -32,12 +32,6 @@ class HomeFragment : Fragment() {
     ): View {
         Log.d(TAG, "onCreateView: Checking authentication")
 
-        if (!RetrofitInstance.AuthManager.isLoggedIn(requireContext())) {
-            Log.d(TAG, "onCreateView: User not logged in, redirecting to login")
-            navigateToLogin()
-            return View(requireContext())
-        }
-
         val homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
@@ -49,36 +43,12 @@ class HomeFragment : Fragment() {
         return root
     }
 
-    override fun onResume() {
-        super.onResume()
-        if (!RetrofitInstance.AuthManager.isLoggedIn(requireContext())) {
-            Log.d(TAG, "onResume: User not logged in, redirecting to login")
-            navigateToLogin()
-            return
-        }
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        if (!RetrofitInstance.AuthManager.isLoggedIn(requireContext())) {
-            Log.d(TAG, "onViewCreated: User not logged in, redirecting to login")
-            navigateToLogin()
-            return
-        }
 
         binding.buttonScanQr.setOnClickListener {
             val intent = Intent(requireContext(), QrScanActivity::class.java)
             startActivityForResult(intent, 1001)
-        }
-    }
-
-    private fun navigateToLogin() {
-        activity?.let {
-            val intent = Intent(it, LoginActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            it.startActivity(intent)
-            it.finish()
         }
     }
 

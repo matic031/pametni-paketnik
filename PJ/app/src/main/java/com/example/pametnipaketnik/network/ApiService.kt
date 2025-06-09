@@ -40,7 +40,6 @@ interface ApiService {
     @POST("auth/login")
     suspend fun loginUser(@Body loginRequest: LoginRequest): Response<LoginResponse>
 
-
     @POST("auth/register")
     suspend fun registerUser(@Body registerRequest: RegisterRequest): Response<RegisterResponse>
 
@@ -54,6 +53,8 @@ interface ApiService {
 
     @GET("api/logs")
     suspend fun getLogs(): Response<GetLogsResponse>
+
+    @GET("auth/me")
     suspend fun getCurrentUserProfile(@Header("Authorization") token: String): Response<GetUserProfileResponse>
 
     @Multipart

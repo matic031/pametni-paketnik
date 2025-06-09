@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -81,7 +82,30 @@ class LoginActivity : AppCompatActivity() {
                         saveUserId(userId)
                     }
 
-                    val faceRegistered = result.response.user?.faceRegistered ?: false
+                    val faceRegistered = result.response.faceRegistered
+                    val lastFaceVerification = result.response.lastFaceVerification
+
+                    val sharedPreferences = getSharedPreferences("PAMETNI_PAKETNIK_PREFS", Context.MODE_PRIVATE)
+                    with(sharedPreferences.edit()) {
+                        putBoolean("FACE_REGISTERED", faceRegistered)
+                        putString("LAST_FACE_VERIFICATION", lastFaceVerification)
+                        apply()
+                    }
+
+                    result.response.user?.let { user ->
+                        val sharedPreferences = getSharedPreferences("PAMETNI_PAKETNIK_PREFS", Context.MODE_PRIVATE)
+                        with(sharedPreferences.edit()) {
+                            putString("USER_ID", user.id)
+                            putString("USER_EMAIL", user.email)
+                            putString("USER_USERNAME", user.username)
+                            putString("USER_NAME", user.name ?: "")
+                            putString("USER_LASTNAME", user.lastName ?: "")
+                            putBoolean("USER_IS_ADMIN", user.isAdmin)
+                            apply()
+                        }
+                    }
+
+                    Log.d("LoginActivity", "Face registered: $faceRegistered")
 
                     RetrofitInstance.AuthManager.syncUserStatus(this, faceRegistered)
 

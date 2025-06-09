@@ -12,7 +12,13 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.pametnipaketnik.databinding.ActivityMainBinding
 import com.example.pametnipaketnik.network.RetrofitInstance
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+import java.util.concurrent.TimeUnit
 import kotlin.apply
 import kotlin.or
 
@@ -53,49 +59,64 @@ class MainActivity : AppCompatActivity() {
     private fun checkAuthAndRedirect() {
         val sharedPreferences = getSharedPreferences("PAMETNI_PAKETNIK_PREFS", Context.MODE_PRIVATE)
         val token = sharedPreferences.getString("AUTH_TOKEN", null)
-        val faceRegistered = sharedPreferences.getBoolean("FACE_REGISTERED", false)
-        val faceVerified = sharedPreferences.getBoolean("FACE_VERIFIED", false)
-
-        if (token == null) {
-            Log.d(TAG, "checkAuthAndRedirect: No token, redirecting to login")
-            navigateToLogin()
-            return
-        }
-
-        lifecycleScope.launch {
-            try {
-                val response = RetrofitInstance.api.getCurrentUserProfile(token)
-                if (response.isSuccessful && response.body() != null) {
-                    val userResponse = response.body()!!
-                    if (userResponse.success) {
-                        val userId = userResponse.user.id
+        if (!token.isNullOrEmpty()) {
+            lifecycleScope.launch {
+                try {
+                    val response = withContext(Dispatchers.IO) {
+                        RetrofitInstance.getApiService(this@MainActivity)
+                            .getCurrentUserProfile("Bearer $token")
+                    }
+                    if (response.isSuccessful && response.body() != null) {
+                        val user = response.body()!!.user
+                        val lastFaceVerification = response.body()!!.user.lastFaceVerification
                         with(sharedPreferences.edit()) {
-                            putString("USER_ID", userId)
+                            putString("USER_ID", user.id)
+                            putString("USER_EMAIL", user.email)
+                            putString("USER_USERNAME", user.username)
+                            putString("USER_NAME", user.name ?: "")
+                            putString("USER_LASTNAME", user.lastName ?: "")
+                            putBoolean("USER_IS_ADMIN", user.isAdmin)
+                            putBoolean("FACE_REGISTERED", user.faceRegistered)
+                            putString("LAST_FACE_VERIFICATION", lastFaceVerification)
+                            putBoolean("FACE_VERIFIED", isFaceVerified(lastFaceVerification))
                             apply()
                         }
-
-                        val userFaceRegistered = userResponse.user.faceRegistered
-                        RetrofitInstance.AuthManager.syncUserStatus(this@MainActivity, userFaceRegistered)
-
-                        if (!userFaceRegistered) {
-                            Log.d(TAG, "checkAuthAndRedirect: Face not registered, redirecting to registration")
-                            navigateToFaceRegistration()
-                        } else if (!faceVerified) {
-                            Log.d(TAG, "checkAuthAndRedirect: Face registered but not verified, redirecting to verification")
-                            navigateToFaceVerification()
-                        }
-                    } else {
-                        Log.d(TAG, "checkAuthAndRedirect: Failed to get user profile, redirecting to login")
-                        navigateToLogin()
                     }
-                } else {
-                    Log.d(TAG, "checkAuthAndRedirect: API error, redirecting to login")
-                    navigateToLogin()
+                } catch (e: Exception) {
+                    Log.e(TAG, "Failed to fetch user profile: ${e.message}")
                 }
-            } catch (e: Exception) {
-                Log.e(TAG, "checkAuthAndRedirect: Exception", e)
-                navigateToLogin()
+                continueAuthCheck()
             }
+        } else {
+            continueAuthCheck()
+        }
+    }
+
+    private fun isFaceVerified(lastFaceVerification: String?): Boolean {
+        if (lastFaceVerification.isNullOrEmpty()) return false
+        return try {
+            val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.getDefault())
+            val lastDate = sdf.parse(lastFaceVerification)
+            val now = Date()
+            val diffMillis = now.time - (lastDate?.time ?: 0L)
+            val diffHours = TimeUnit.MILLISECONDS.toHours(diffMillis)
+            diffHours < 2
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    private fun continueAuthCheck() {
+        val sharedPreferences = getSharedPreferences("PAMETNI_PAKETNIK_PREFS", Context.MODE_PRIVATE)
+        val token = sharedPreferences.getString("AUTH_TOKEN", null)
+        val faceRegistered = sharedPreferences.getBoolean("FACE_REGISTERED", false)
+        val faceVerified = sharedPreferences.getBoolean("FACE_VERIFIED", false)
+        val email = sharedPreferences.getString("USER_EMAIL", "unknown")
+        Log.d(TAG, "checkAuthAndRedirect: faceRegistered=$faceRegistered, faceVerified=$faceVerified, email=$email, token=$token")
+        when {
+            token.isNullOrEmpty() -> navigateToLogin()
+            !faceRegistered -> navigateToFaceRegistration()
+            faceRegistered && !faceVerified -> navigateToFaceVerification()
         }
     }
 
