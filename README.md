@@ -4,7 +4,7 @@
 
 1.  **Konfiguracija okoljskih spremenljivk:**
 
-    - V direktorijema `RAIN/frontend` in `AIN/backend`, kopirajte `.env.example` v `.env`:
+    - V direktorijema `RAIN/frontend` in `RAIN/backend`, kopirajte `.env.example` v `.env`:
     - Uredite novo datoteko `.env` in vnesite vaš `MONGO_ROOT_USER` in `MONGO_ROOT_PASSWORD`.
 
 2.  **Zagon Docker kontejnerjev (backend, podatkovna baza, frontend):**
