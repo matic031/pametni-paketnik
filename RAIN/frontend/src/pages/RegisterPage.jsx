@@ -39,7 +39,6 @@ const RegisterPage = () => {
     const { username, email, password, confirmPassword, name, lastName } =
       formData;
 
-    // validation
     if (!username || !email || !password) {
       setError("Prosim, izpolnite vsa obvezna polja");
       setIsLoading(false);
@@ -120,43 +119,53 @@ const RegisterPage = () => {
   ];
 
   return (
-    <div className="hero min-h-screen bg-base-200">
-      <div className="hero-content flex-col">
-        <div className="text-center">
-          <h1 className="text-4xl font-bold">Registracija</h1>
+    <div className="min-h-screen bg-gradient-to-br from-primary/5 via-base-200 to-secondary/5 flex items-center justify-center p-4">
+      <div className="w-full max-w-lg">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <h1 className="text-5xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mb-2">
+            Registracija
+          </h1>
+          <p className="text-base-content/70 text-lg">Ustvarite nov račun</p>
         </div>
 
-        <div className="card flex-shrink-0 w-full max-w-md shadow-2xl bg-base-100">
-          <div className="card-body">
+        {/* Card */}
+        <div className="bg-base-100 rounded-2xl shadow-xl border border-base-300/50 backdrop-blur-sm">
+          <div className="p-8">
+            {/* Alerts */}
             {error && (
-              <div className="alert alert-error">
-                <FaExclamationCircle />
-                <span>{error}</span>
+              <div className="alert alert-error mb-6 rounded-xl">
+                <FaExclamationCircle className="text-lg" />
+                <span className="font-medium">{error}</span>
               </div>
             )}
 
             {success && (
-              <div className="alert alert-success">
-                <FaCheckCircle />
-                <span>{success}</span>
+              <div className="alert alert-success mb-6 rounded-xl">
+                <FaCheckCircle className="text-lg" />
+                <span className="font-medium">{success}</span>
               </div>
             )}
 
-            <form onSubmit={handleSubmit}>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Form */}
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {formFields.map((field) => (
                   <div key={field.name} className="form-control">
-                    <label className="label">
-                      <span className="label-text">{field.label}</span>
+                    <label className="label pb-2">
+                      <span className="label-text font-medium text-base-content/90 flex items-center gap-2">
+                        {field.icon}
+                        {field.label}
+                      </span>
                     </label>
-                    <div className="input-group">
-                      <span>{field.icon}</span>
+                    <div className="relative">
                       <input
                         type={field.type}
                         name={field.name}
                         value={formData[field.name]}
                         onChange={handleChange}
-                        className="input input-bordered w-full"
+                        className="input input-bordered w-full h-12 pl-4 pr-4 text-base rounded-xl border-2 focus:border-primary focus:outline-none transition-all duration-200 hover:border-primary/50"
+                        placeholder={`Vnesite ${field.label.toLowerCase().replace('*', '')}`}
                         required={field.required}
                       />
                     </div>
@@ -164,14 +173,18 @@ const RegisterPage = () => {
                 ))}
               </div>
 
-              <div className="form-control mt-6">
+              {/* Submit Button */}
+              <div className="form-control pt-4">
                 <button
                   type="submit"
-                  className="btn btn-primary"
+                  className="btn btn-primary h-12 text-base font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:-translate-y-0.5"
                   disabled={isLoading}
                 >
                   {isLoading ? (
-                    <span className="loading loading-spinner loading-sm"></span>
+                    <>
+                      <span className="loading loading-spinner loading-sm"></span>
+                      Registriranje...
+                    </>
                   ) : (
                     "Registriraj se"
                   )}
@@ -179,16 +192,23 @@ const RegisterPage = () => {
               </div>
             </form>
 
-            <div className="text-center mt-4">
-              <p>
+            {/* Footer Links */}
+            <div className="text-center mt-8 space-y-3">
+              <p className="text-base-content/70">
                 Že imate račun?{" "}
-                <Link to="/login" className="link link-primary">
+                <Link
+                  to="/login"
+                  className="link link-primary font-semibold hover:link-hover transition-colors duration-200"
+                >
                   Prijavite se
                 </Link>
               </p>
-              <p className="mt-2">
-                <Link to="/" className="link link-neutral">
-                  Nazaj na domačo stran
+              <p>
+                <Link
+                  to="/"
+                  className="link link-neutral text-sm hover:link-hover transition-colors duration-200"
+                >
+                  ← Nazaj na domačo stran
                 </Link>
               </p>
             </div>

@@ -159,7 +159,7 @@ const faceController = {
                     return res.json({
                         success: true,
                         verified: true,
-                        message: '2FA verification successful',
+                        message: 'Verifikacija obraza uspešna',
                         similarity_score,
                         threshold
                     });
@@ -169,7 +169,7 @@ const faceController = {
                     return res.status(401).json({
                         success: false,
                         verified: false,
-                        message: '2FA verification failed - face does not match',
+                        message: 'Verifikacija obraza ni uspela - obraz se ne ujema',
                         similarity_score,
                         threshold
                     });
