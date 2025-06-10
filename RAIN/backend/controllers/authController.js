@@ -94,6 +94,32 @@ const authController = {
                 });
             }
 
+            const now = new Date();
+            const twoHoursAgo = new Date(now.getTime() - 2 * 60 * 60 * 1000);
+
+            if (!user.faceRegistered) {
+                return res.status(403).json({
+                    success: false,
+                    requiresFaceVerification: true,
+                    message: 'Potrebna je registracija obraza na aplikaciji',
+                    userId: user._id,
+                    faceRegistered: user.faceRegistered,
+                    lastFaceVerification: user.lastFaceVerification
+                });
+            }
+
+            if (user.faceRegistered &&
+                (!user.lastFaceVerification || user.lastFaceVerification < twoHoursAgo)) {
+                return res.status(403).json({
+                    success: false,
+                    requiresFaceVerification: true,
+                    message: 'Potrebna je verifikacija obraza na aplikaciji',
+                    userId: user._id,
+                    faceRegistered: user.faceRegistered,
+                    lastFaceVerification: user.lastFaceVerification
+                });
+            }
+
             const payload = {
                 id: user._id,
                 username: user.username,
@@ -116,7 +142,9 @@ const authController = {
                     email: user.email,
                     name: user.name,
                     lastName: user.lastName,
-                    isAdmin: user.isAdmin
+                    isAdmin: user.isAdmin,
+                    faceRegistered: user.faceRegistered,
+                    lastFaceVerification: user.lastFaceVerification
                 }
             });
         } catch (error) {

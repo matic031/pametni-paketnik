@@ -17,6 +17,7 @@ sealed class LoginResult {
     object Loading : LoginResult()
     data class Success(val response: LoginResponse) : LoginResult()
     data class Error(val message: String) : LoginResult()
+    data class FaceVerificationRequired(val message: String, val userId: String) : LoginResult()
 }
 
 class LoginViewModel(application: Application) : AndroidViewModel(application) {
@@ -47,10 +48,24 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
                     val errorBody = response.errorBody()?.string()
                     val errorMessage = if (errorBody != null) {
                         try {
-                            val apiError = Gson().fromJson(errorBody, ApiErrorResponse::class.java)
-                            apiError.message ?: "Login failed"
+                            val loginResponse = Gson().fromJson(errorBody, LoginResponse::class.java)
+                            // čekira ali je potrebna verifikacija obraza
+                            if (response.code() == 403 && loginResponse.requiresFaceVerification == true) {
+                                _loginResult.value = LoginResult.FaceVerificationRequired(
+                                    loginResponse.message ?: "Potrebna je ponovna verifikacija obraza",
+                                    loginResponse.userId ?: ""
+                                )
+                                return@launch
+                            } else {
+                                loginResponse.message ?: "Login failed"
+                            }
                         } catch (e: Exception) {
-                            "Error: $errorBody"
+                            try {
+                                val apiError = Gson().fromJson(errorBody, ApiErrorResponse::class.java)
+                                apiError.message ?: "Login failed"
+                            } catch (e2: Exception) {
+                                "Error: $errorBody"
+                            }
                         }
                     } else {
                         "Login failed with code: ${response.code()}"

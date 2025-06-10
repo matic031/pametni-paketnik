@@ -72,6 +72,17 @@ export const AuthProvider = ({ children }) => {
         return { success: false, message: "Prijava ni uspela" };
       }
     } catch (err) {
+      if (err.response?.status === 403 && err.response?.data?.requiresFaceVerification) {
+        return {
+          success: false,
+          requiresFaceVerification: true,
+          message: err.response.data.message,
+          userId: err.response.data.userId,
+          faceRegistered: err.response.data.faceRegistered,
+          lastFaceVerification: err.response.data.lastFaceVerification
+        };
+      }
+
       const errorMsg = err.response?.data?.message || "Napačno uporabniško ime ali geslo.";
       setError(errorMsg);
       return { success: false, message: errorMsg };

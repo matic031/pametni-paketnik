@@ -35,11 +35,15 @@ const LoginPage = () => {
         const destination = result.user.isAdmin ? "/admin/dashboard" : "/dashboard";
         console.log("Login Result:", result);
         console.log("Is Admin?:", result.user?.isAdmin);
-        navigate(destination, {state: {user: result.user}});
+        navigate(destination, { state: { user: result.user } });
+      } else if (result.requiresFaceVerification) {
+        setError("Potrebna je verifikacija obraza na aplikaciji");
+
       } else {
         setError(result.message || "Prijava ni uspela");
       }
-    } catch (err) {
+    } catch (error) {
+      console.error("Login error:", error);
       setError("Prišlo je do napake pri prijavi");
     } finally {
       setIsLoading(false);
@@ -47,68 +51,81 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="hero min-h-screen bg-base-200">
-      <div className="hero-content flex-col">
-        <div className="text-center">
-          <h1 className="text-4xl font-bold">Prijava</h1>
+    <div className="min-h-screen bg-gradient-to-br from-primary/5 via-base-200 to-secondary/5 flex items-center justify-center p-4">
+      <div className="w-full max-w-md">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <h1 className="text-5xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mb-2">
+            Prijava
+          </h1>
+          <p className="text-base-content/70 text-lg">Prijavite se v svoj račun</p>
         </div>
 
-        <div className="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
-          <div className="card-body">
+        {/* Card */}
+        <div className="bg-base-100 rounded-2xl shadow-xl border border-base-300/50 backdrop-blur-sm">
+          <div className="p-8">
+            {/* Alert */}
             {error && (
-              <div className="alert alert-error">
-                <FaExclamationCircle />
-                <span>{error}</span>
+              <div className="alert alert-error mb-6 rounded-xl">
+                <FaExclamationCircle className="text-lg" />
+                <span className="font-medium">{error}</span>
               </div>
             )}
 
-            <form onSubmit={handleSubmit}>
+            {/* Form */}
+            <form onSubmit={handleSubmit} className="space-y-6">
               <div className="form-control">
-                <label className="label">
-                  <span className="label-text">Uporabniško ime</span>
-                </label>
-                <div className="input-group">
-                  <span>
+                <label className="label pb-2">
+                  <span className="label-text font-medium text-base-content/90 flex items-center gap-2">
                     <FaUser />
+                    Uporabniško ime
                   </span>
+                </label>
+                <div className="relative">
                   <input
                     type="text"
                     name="username"
                     value={formData.username}
                     onChange={handleChange}
-                    className="input input-bordered w-full"
+                    className="input input-bordered w-full h-12 pl-4 pr-4 text-base rounded-xl border-2 focus:border-primary focus:outline-none transition-all duration-200 hover:border-primary/50"
+                    placeholder="Vnesite uporabniško ime"
                     required
                   />
                 </div>
               </div>
 
               <div className="form-control">
-                <label className="label">
-                  <span className="label-text">Geslo</span>
-                </label>
-                <div className="input-group">
-                  <span>
+                <label className="label pb-2">
+                  <span className="label-text font-medium text-base-content/90 flex items-center gap-2">
                     <FaLock />
+                    Geslo
                   </span>
+                </label>
+                <div className="relative">
                   <input
                     type="password"
                     name="password"
                     value={formData.password}
                     onChange={handleChange}
-                    className="input input-bordered w-full"
+                    className="input input-bordered w-full h-12 pl-4 pr-4 text-base rounded-xl border-2 focus:border-primary focus:outline-none transition-all duration-200 hover:border-primary/50"
+                    placeholder="Vnesite geslo"
                     required
                   />
                 </div>
               </div>
 
-              <div className="form-control mt-6">
+              {/* Submit Button */}
+              <div className="form-control pt-4">
                 <button
                   type="submit"
-                  className="btn btn-primary"
+                  className="btn btn-primary h-12 text-base font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:-translate-y-0.5"
                   disabled={isLoading}
                 >
                   {isLoading ? (
-                    <span className="loading loading-spinner loading-sm"></span>
+                    <>
+                      <span className="loading loading-spinner loading-sm"></span>
+                      Prijavlja...
+                    </>
                   ) : (
                     "Prijava"
                   )}
@@ -116,16 +133,23 @@ const LoginPage = () => {
               </div>
             </form>
 
-            <div className="text-center mt-4">
-              <p>
+            {/* Footer Links */}
+            <div className="text-center mt-8 space-y-3">
+              <p className="text-base-content/70">
                 Nimate računa?{" "}
-                <Link to="/register" className="link link-primary">
+                <Link
+                  to="/register"
+                  className="link link-primary font-semibold hover:link-hover transition-colors duration-200"
+                >
                   Registrirajte se
                 </Link>
               </p>
-              <p className="mt-2">
-                <Link to="/" className="link link-neutral">
-                  Nazaj na domačo stran
+              <p>
+                <Link
+                  to="/"
+                  className="link link-neutral text-sm hover:link-hover transition-colors duration-200"
+                >
+                  ← Nazaj na domačo stran
                 </Link>
               </p>
             </div>
