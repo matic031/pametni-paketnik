@@ -40,6 +40,14 @@ const UserSchema = new Schema({
     lastFaceVerification: {
         type: Date,
         default: null
+    },
+    pendingNotification: {
+        type: String,
+        default: null
+    },
+    notificationTimestamp: {
+        type: Date,
+        default: null
     }
 }, {
     timestamps: true

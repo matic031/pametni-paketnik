@@ -36,15 +36,28 @@ data class FaceVerificationResponse(
     val threshold: Double
 )
 
+data class NotificationResponse(
+    val success: Boolean,
+    val hasNotification: Boolean,
+    val message: String? = null,
+    val timestamp: String? = null
+)
+
 interface ApiService {
     @POST("auth/login")
-    suspend fun loginUser(@Body loginRequest: LoginRequest): Response<LoginResponse>
+    suspend fun loginUser(
+        @Body loginRequest: LoginRequest,
+        @Header("X-Client-Type") clientType: String = "app"
+    ): Response<LoginResponse>
 
     @POST("auth/register")
     suspend fun registerUser(@Body registerRequest: RegisterRequest): Response<RegisterResponse>
 
     @GET("auth/me")
     suspend fun getCurrentUserProfile(): Response<GetUserProfileResponse>
+
+    @GET("auth/notifications")
+    suspend fun checkNotifications(): Response<NotificationResponse>
 
     @POST("api/logs")
     suspend fun createLog(
