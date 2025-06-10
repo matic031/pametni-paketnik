@@ -66,11 +66,13 @@ export const AuthProvider = ({ children }) => {
         localStorage.setItem("token", response.data.token);
         axios.defaults.headers.common["Authorization"] = response.data.token;
         setUser(response.data.user);
-        return { success: true };
+
+        return { success: true, user: response.data.user };
+      } else {
+        return { success: false, message: "Prijava ni uspela" };
       }
     } catch (err) {
-      const errorMsg =
-        err.response?.data?.message || "Napačno uporabniško ime ali geslo.";
+      const errorMsg = err.response?.data?.message || "Napačno uporabniško ime ali geslo.";
       setError(errorMsg);
       return { success: false, message: errorMsg };
     }
