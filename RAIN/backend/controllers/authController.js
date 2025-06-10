@@ -115,7 +115,8 @@ const authController = {
                     username: user.username,
                     email: user.email,
                     name: user.name,
-                    lastName: user.lastName
+                    lastName: user.lastName,
+                    isAdmin: user.isAdmin
                 }
             });
         } catch (error) {

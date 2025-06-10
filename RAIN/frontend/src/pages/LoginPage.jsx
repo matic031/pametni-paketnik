@@ -31,8 +31,11 @@ const LoginPage = () => {
     try {
       const result = await login(username, password);
 
-      if (result.success) {
-        navigate("/dashboard");
+      if (result.success && result.user) {
+        const destination = result.user.isAdmin ? "/admin/dashboard" : "/dashboard";
+        console.log("Login Result:", result);
+        console.log("Is Admin?:", result.user?.isAdmin);
+        navigate(destination, {state: {user: result.user}});
       } else {
         setError(result.message || "Prijava ni uspela");
       }
