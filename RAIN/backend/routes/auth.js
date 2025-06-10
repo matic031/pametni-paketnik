@@ -9,5 +9,6 @@ router.post('/login', authController.login);
 
 // Protected routes
 router.get('/me', auth, authController.getCurrentUser);
+router.get('/notifications', auth, authController.checkNotifications);
 
 module.exports = router;

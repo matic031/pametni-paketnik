@@ -96,28 +96,44 @@ const authController = {
 
             const now = new Date();
             const twoHoursAgo = new Date(now.getTime() - 2 * 60 * 60 * 1000);
+            const clientType = req.headers['x-client-type'] || 'web';
 
-            if (!user.faceRegistered) {
-                return res.status(403).json({
-                    success: false,
-                    requiresFaceVerification: true,
-                    message: 'Potrebna je registracija obraza na aplikaciji',
-                    userId: user._id,
-                    faceRegistered: user.faceRegistered,
-                    lastFaceVerification: user.lastFaceVerification
-                });
-            }
+            console.log('Client type:', clientType);
+            console.log('User:', user);
 
-            if (user.faceRegistered &&
-                (!user.lastFaceVerification || user.lastFaceVerification < twoHoursAgo)) {
-                return res.status(403).json({
-                    success: false,
-                    requiresFaceVerification: true,
-                    message: 'Potrebna je verifikacija obraza na aplikaciji',
-                    userId: user._id,
-                    faceRegistered: user.faceRegistered,
-                    lastFaceVerification: user.lastFaceVerification
-                });
+            if (clientType !== 'app') {
+                if (!user.faceRegistered) {
+                    await User.findByIdAndUpdate(user._id, {
+                        pendingNotification: 'Potrebna je registracija obraza pred prvo prijavo',
+                        notificationTimestamp: new Date()
+                    });
+
+                    return res.status(403).json({
+                        success: false,
+                        requiresFaceVerification: true,
+                        message: 'Potrebna je registracija obraza pred prvo prijavo',
+                        userId: user._id,
+                        faceRegistered: user.faceRegistered,
+                        lastFaceVerification: user.lastFaceVerification
+                    });
+                }
+
+                if (user.faceRegistered &&
+                    (!user.lastFaceVerification || user.lastFaceVerification < twoHoursAgo)) {
+                    await User.findByIdAndUpdate(user._id, {
+                        pendingNotification: 'Potrebna je ponovna verifikacija obraza',
+                        notificationTimestamp: new Date()
+                    });
+
+                    return res.status(403).json({
+                        success: false,
+                        requiresFaceVerification: true,
+                        message: 'Potrebna je ponovna verifikacija obraza',
+                        userId: user._id,
+                        faceRegistered: user.faceRegistered,
+                        lastFaceVerification: user.lastFaceVerification
+                    });
+                }
             }
 
             const payload = {
@@ -178,6 +194,47 @@ const authController = {
             res.status(500).json({
                 success: false,
                 message: 'Napaka pri pridobivanju profila',
+                error: error.message
+            });
+        }
+    },
+
+    /**
+     * Check for pending notifications (for mobile app)
+     */
+    checkNotifications: async (req, res) => {
+        try {
+            const user = await User.findById(req.user.id);
+
+            if (!user) {
+                return res.status(404).json({
+                    success: false,
+                    message: 'Uporabnik ni bil najden'
+                });
+            }
+
+            if (user.pendingNotification) {
+                await User.findByIdAndUpdate(req.user.id, {
+                    pendingNotification: null,
+                    notificationTimestamp: null
+                });
+
+                return res.json({
+                    success: true,
+                    hasNotification: true,
+                    message: user.pendingNotification,
+                    timestamp: user.notificationTimestamp
+                });
+            }
+
+            res.json({
+                success: true,
+                hasNotification: false
+            });
+        } catch (error) {
+            res.status(500).json({
+                success: false,
+                message: 'Napaka pri preverjanju obvestil',
                 error: error.message
             });
         }

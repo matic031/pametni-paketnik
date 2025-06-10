@@ -13,16 +13,20 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
+import androidx.lifecycle.lifecycleScope
 import com.example.pametnipaketnik.data.TokenManager
 import com.example.pametnipaketnik.databinding.ActivityLoginBinding
 import com.example.pametnipaketnik.network.RetrofitInstance
 import com.example.pametnipaketnik.ui.login.LoginResult
 import com.example.pametnipaketnik.ui.login.LoginViewModel
+import kotlinx.coroutines.launch
 
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
-    private val loginViewModel: LoginViewModel by viewModels()    override fun onCreate(savedInstanceState: Bundle?) {
+    private val loginViewModel: LoginViewModel by viewModels()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         if (isUserLoggedIn()) {
@@ -76,9 +80,9 @@ class LoginActivity : AppCompatActivity() {
                     binding.textViewError.visibility = View.GONE
 
                     val tokenToSave = result.response.token
-                    saveAuthToken(tokenToSave)
+                    saveAuthToken(tokenToSave.toString())
                     // Shranimo žeton v TokenManager
-                    TokenManager.saveToken(this, result.response.token)
+                    TokenManager.saveToken(this, result.response.token.toString())
 
                     result.response.user?.id?.let { userId ->
                         saveUserId(userId)
@@ -89,7 +93,7 @@ class LoginActivity : AppCompatActivity() {
 
                     val sharedPreferences = getSharedPreferences("PAMETNI_PAKETNIK_PREFS", Context.MODE_PRIVATE)
                     with(sharedPreferences.edit()) {
-                        putBoolean("FACE_REGISTERED", faceRegistered)
+                        putBoolean("FACE_REGISTERED", faceRegistered ?: false)
                         putString("LAST_FACE_VERIFICATION", lastFaceVerification)
                         apply()
                     }
@@ -109,31 +113,19 @@ class LoginActivity : AppCompatActivity() {
 
                     Log.d("LoginActivity", "Face registered: $faceRegistered")
 
-                    RetrofitInstance.AuthManager.syncUserStatus(this, faceRegistered)
+                    RetrofitInstance.AuthManager.syncUserStatus(this, faceRegistered ?: false)
 
-                    if (faceRegistered) {
-                        navigateToFaceVerification()
-                    } else {
-                        navigateToFaceRegistration()
+                    checkForNotifications {
+                        if (faceRegistered == true) {
+                            navigateToFaceVerification()
+                        } else {
+                            navigateToFaceRegistration()
+                        }
                     }
-
                 }
                 is LoginResult.Error -> {
                     binding.progressBarLogin.visibility = View.GONE
                     binding.buttonLogin.isEnabled = true
-                    binding.textViewError.text = result.message
-                    binding.textViewError.visibility = View.VISIBLE
-
-                    binding.editTextUsername.text?.clear()
-                    binding.editTextPassword.text?.clear()
-                    binding.editTextUsername.requestFocus()
-                }
-                is LoginResult.FaceVerificationRequired -> {
-                    binding.progressBarLogin.visibility = View.GONE
-                    binding.buttonLogin.isEnabled = true
-                    
-                    showFaceVerificationNotification(result.message)
-                    
                     binding.textViewError.text = result.message
                     binding.textViewError.visibility = View.VISIBLE
 
@@ -205,5 +197,23 @@ class LoginActivity : AppCompatActivity() {
         val notificationManager: NotificationManager =
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.notify(1001, builder.build())
+    }
+
+    private fun checkForNotifications(onComplete: () -> Unit) {
+        lifecycleScope.launch {
+            try {
+                val response = RetrofitInstance.getApiService(this@LoginActivity).checkNotifications()
+                if (response.isSuccessful && response.body() != null) {
+                    val notificationResponse = response.body()!!
+                    if (notificationResponse.success && notificationResponse.hasNotification) {
+                        showFaceVerificationNotification(notificationResponse.message ?: "Potrebna je verifikacija obraza")
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("LoginActivity", "Error checking notifications: ${e.message}")
+            } finally {
+                onComplete()
+            }
+        }
     }
 }
