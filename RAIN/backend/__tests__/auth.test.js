@@ -66,13 +66,13 @@ describe('Auth', () => {
         expect(res.status).toBe(409);
     });
 
-    it('logs in registered user', async () => {
+    it('requires face verification for a new user on login', async () => {
         await request(app).post('/auth/register').send(testUser);
         const res = await request(app)
             .post('/auth/login')
             .send({ username: testUser.username, password: testUser.password });
 
-        expect(res.status).toBe(200);
-        expect(res.body.token).toBeDefined();
+        expect(res.status).toBe(403);
+        expect(res.body.requiresFaceVerification).toBe(true); 
     });
 });

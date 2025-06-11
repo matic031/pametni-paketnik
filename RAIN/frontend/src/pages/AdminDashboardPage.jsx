@@ -26,7 +26,7 @@ const AdminDashboardPage = () => {
         setIsLoadingUsers(true);
         setError("");
         try {
-            // Uporabimo Promise.all, da hkrati pošljemo oba zahtevka
+
             const [boxesResponse, usersResponse] = await Promise.all([
                 axios.get(`${API_URL}/api/boxes/admin/all`),
                 axios.get(`${API_URL}/api/users`)
@@ -114,7 +114,7 @@ const AdminDashboardPage = () => {
                 </div>
             </div>
 
-            {/* --- VRNJENA KARTICA ZA PREGLED PAKETNIKOV --- */}
+
             <div className="card bg-base-100 shadow-xl">
                 <div className="card-body">
                     <h2 className="card-title"><FaBox /> Pregled vseh paketnikov</h2>

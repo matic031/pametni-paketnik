@@ -114,7 +114,7 @@ class QrScanActivity : AppCompatActivity() {
             capture.onRequestPermissionsResult(requestCode, permissions, grantResults)
         }
     }
-    
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null) {
             val imageUri: Uri? = data.data
