@@ -17,12 +17,12 @@ const DashboardPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // --- KODA ZA MODAL, KI JE PREJ MANJKALA ---
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newBoxId, setNewBoxId] = useState("");
   const [newBoxName, setNewBoxName] = useState("");
   const [modalError, setModalError] = useState("");
-  // ------------------------------------------
+
 
   const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
@@ -49,7 +49,7 @@ const DashboardPage = () => {
     fetchDashboardData();
   }, []);
 
-  // --- FUNKCIJA ZA DODAJANJE, KI JE BILA POVEZANA Z MANJKAJOČIM MODALOM ---
+
   const handleAddBox = async (e) => {
     e.preventDefault();
     setModalError("");
@@ -70,7 +70,7 @@ const DashboardPage = () => {
       setModalError(err.response?.data?.message || "Napaka pri dodajanju.");
     }
   };
-  // -----------------------------------------------------------------------
+
 
   const handleRemoveBox = async (boxId) => {
     if (!window.confirm("Ali ste prepričani, da želite odstraniti ta paketnik?")) {
@@ -202,7 +202,6 @@ const DashboardPage = () => {
           </div>
         </div>
 
-        {/* --- VRNJEN MODAL ZA DODAJANJE PAKETNIKA --- */}
         {isModalOpen && (
             <div className="modal modal-open">
               <div className="modal-box">

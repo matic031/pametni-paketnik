@@ -5,23 +5,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="23977fc2-a676-45c8-8179-079af368b473" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../PJ/app/src/main/java/com/example/pametnipaketnik/data/CreateLogRequest.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../PJ/app/src/main/java/com/example/pametnipaketnik/data/GetLogsResponse.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../PJ/app/src/main/java/com/example/pametnipaketnik/data/LogEntry.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../PJ/app/src/main/java/com/example/pametnipaketnik/data/TokenManager.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/controllers/logController.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/models/log.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/routes/logs.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../PJ/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../PJ/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../PJ/app/src/main/java/com/example/pametnipaketnik/LoginActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../PJ/app/src/main/java/com/example/pametnipaketnik/LoginActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../PJ/app/src/main/java/com/example/pametnipaketnik/OpenBoxRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../PJ/app/src/main/java/com/example/pametnipaketnik/OpenBoxRepository.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../PJ/app/src/main/java/com/example/pametnipaketnik/network/ApiService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../PJ/app/src/main/java/com/example/pametnipaketnik/network/ApiService.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../PJ/app/src/main/java/com/example/pametnipaketnik/ui/home/HomeFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../PJ/app/src/main/java/com/example/pametnipaketnik/ui/home/HomeFragment.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../PJ/app/src/main/java/com/example/pametnipaketnik/ui/profile/ProfileFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../PJ/app/src/main/java/com/example/pametnipaketnik/ui/profile/ProfileFragment.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/__tests__/AdminDashboardPage.test.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/__tests__/AdminRoutes.test.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/__tests__/LoginPage.test.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/__tests__/setupTests.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/__tests__/vite.config.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/test-utils.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../PJ/app/src/main/java/com/example/pametnipaketnik/QrScanActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../PJ/app/src/main/java/com/example/pametnipaketnik/QrScanActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../PJ/app/src/main/java/com/example/pametnipaketnik/network/RetrofitInstance.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../PJ/app/src/main/java/com/example/pametnipaketnik/network/RetrofitInstance.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../PJ/app/src/main/java/com/example/pametnipaketnik/ui/notifications/NotificationsFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../PJ/app/src/main/java/com/example/pametnipaketnik/ui/notifications/NotificationsFragment.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../PJ/gradle.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../PJ/gradle.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/AdminDashboardPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/AdminDashboardPage.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/DashboardPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/DashboardPage.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,6 +33,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="JavaScript File" />
+        <option value="JSX File" />
       </list>
     </option>
   </component>
@@ -91,6 +90,8 @@
       <workItem from="1749056758421" duration="887000" />
       <workItem from="1749135648298" duration="159000" />
       <workItem from="1749280728771" duration="2334000" />
+      <workItem from="1749589013982" duration="779000" />
+      <workItem from="1749627891875" duration="3553000" />
     </task>
     <servers />
   </component>
