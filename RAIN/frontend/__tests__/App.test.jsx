@@ -7,9 +7,9 @@ describe('App', () => {
         render(<App />);
         const titleElement = screen.getByRole('heading', {
             level: 1,
-            name: /pametni paketnik/i
+            name: /omarica/i
         });
         expect(titleElement).toBeDefined();
-        expect(titleElement.textContent).toMatch(/pametni paketnik/i);
+        expect(titleElement.textContent).toMatch(/omarica/i);
     });
 });

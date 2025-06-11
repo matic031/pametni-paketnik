@@ -22,9 +22,9 @@ const boxController = {
             if (box.user) {
                 // Preveri, če je lastnik trenutni uporabnik
                 if (box.user.toString() === userId) {
-                    return res.status(409).json({ success: false, message: 'Ta paketnik je že vaš.' });
+                    return res.status(409).json({ success: false, message: 'Ta pametna omarica je že vaša.' });
                 } else {
-                    return res.status(409).json({ success: false, message: 'Paketnik je že v lasti drugega uporabnika.' });
+                    return res.status(409).json({ success: false, message: 'Pametna omarica je že v lasti drugega uporabnika.' });
                 }
             }
 
@@ -70,7 +70,7 @@ const boxController = {
             });
 
             await newBox.save();
-            res.status(201).json({ success: true, message: 'Nov paketnik uspešno ustvarjen v bazi.', box: newBox });
+            res.status(201).json({ success: true, message: 'Nova pametna omarica uspešno ustvarjena v bazi.', box: newBox });
 
         } catch (err) {
             console.error('Error creating box:', err.message);

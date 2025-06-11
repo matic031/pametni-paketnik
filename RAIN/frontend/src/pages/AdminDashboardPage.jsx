@@ -60,7 +60,7 @@ const AdminDashboardPage = () => {
     };
 
     const handleAdminDeleteBox = async (boxId) => {
-        if (!window.confirm("Ali ste prepričani, da želite TRAJNO izbrisati paketnik?")) {
+        if (!window.confirm("Ali ste prepričani, da želite TRAJNO izbrisati pametno omarico?")) {
             return;
         }
         try {
@@ -84,11 +84,11 @@ const AdminDashboardPage = () => {
         <div className="min-h-screen bg-base-200 p-4">
             <div className="navbar bg-base-100 rounded-box shadow-lg mb-6">
                 <div className="flex-1">
-                    <Link to="/" className="btn btn-ghost normal-case text-xl">Pametni Paketnik - ADMIN</Link>
+                    <Link to="/" className="btn btn-ghost normal-case text-xl">Pametne omarice - ADMIN</Link>
                 </div>
                 <div className="flex-none gap-2">
                     <Link to="/dashboard" className="btn btn-ghost">
-                        <FaTachometerAlt className="mr-2"/> Uporabniški portal
+                        <FaTachometerAlt className="mr-2" /> Uporabniški portal
                     </Link>
                     <button onClick={logout} className="btn btn-error btn-sm">
                         <FaSignOutAlt className="mr-2" /> Odjava
@@ -101,14 +101,14 @@ const AdminDashboardPage = () => {
 
             <div className="card bg-base-100 shadow-xl mb-8">
                 <div className="card-body">
-                    <h2 className="card-title"><FaPlusCircle /> Dodaj nov paketnik v sistem</h2>
+                    <h2 className="card-title"><FaPlusCircle /> Dodaj novo pametno omarico v sistem</h2>
                     <form onSubmit={handleCreateBox}>
                         <div className="form-control">
-                            <label className="label"><span className="label-text">ID Paketnika</span></label>
-                            <input type="number" value={newBoxId} onChange={(e) => setNewBoxId(e.target.value)} className="input input-bordered" placeholder="npr. 123456"/>
+                            <label className="label"><span className="label-text">ID Pametne omarice</span></label>
+                            <input type="number" value={newBoxId} onChange={(e) => setNewBoxId(e.target.value)} className="input input-bordered" placeholder="npr. 123456" />
                         </div>
                         <div className="card-actions justify-end mt-4">
-                            <button type="submit" className="btn btn-primary">Ustvari paketnik</button>
+                            <button type="submit" className="btn btn-primary">Ustvari pametno omarico</button>
                         </div>
                     </form>
                 </div>
@@ -124,30 +124,30 @@ const AdminDashboardPage = () => {
                         <div className="overflow-x-auto">
                             <table className="table w-full">
                                 <thead>
-                                <tr>
-                                    <th>ID Paketnika</th>
-                                    <th>Ime po meri</th>
-                                    <th>Lastnik</th>
-                                    <th>Status</th>
-                                    <th>Dejanja</th>
-                                </tr>
+                                    <tr>
+                                        <th>ID Pametne omarice</th>
+                                        <th>Ime po meri</th>
+                                        <th>Lastnik</th>
+                                        <th>Status</th>
+                                        <th>Dejanja</th>
+                                    </tr>
                                 </thead>
                                 <tbody>
-                                {allBoxes.map(box => (
-                                    <tr key={box._id}>
-                                        <td className="font-bold">{box.boxId}</td>
-                                        <td>{box.customName || '/'}</td>
-                                        <td>{box.user ? box.user.username : <span className="opacity-50">Brez lastnika</span>}</td>
-                                        <td>
+                                    {allBoxes.map(box => (
+                                        <tr key={box._id}>
+                                            <td className="font-bold">{box.boxId}</td>
+                                            <td>{box.customName || '/'}</td>
+                                            <td>{box.user ? box.user.username : <span className="opacity-50">Brez lastnika</span>}</td>
+                                            <td>
                                                 <span className={`badge ${box.user ? 'badge-success' : 'badge-warning'}`}>
                                                     {box.user ? 'Dodeljen' : 'Prost'}
                                                 </span>
-                                        </td>
-                                        <td>
-                                            <button onClick={() => handleAdminDeleteBox(box._id)} className="btn btn-xs btn-error"><FaTrash /></button>
-                                        </td>
-                                    </tr>
-                                ))}
+                                            </td>
+                                            <td>
+                                                <button onClick={() => handleAdminDeleteBox(box._id)} className="btn btn-xs btn-error"><FaTrash /></button>
+                                            </td>
+                                        </tr>
+                                    ))}
                                 </tbody>
                             </table>
                         </div>
@@ -164,36 +164,36 @@ const AdminDashboardPage = () => {
                         <div className="overflow-x-auto">
                             <table className="table w-full">
                                 <thead>
-                                <tr>
-                                    <th>Uporabniško ime</th>
-                                    <th>E-pošta</th>
-                                    <th>Status</th>
-                                    <th>Dejanja</th>
-                                </tr>
+                                    <tr>
+                                        <th>Uporabniško ime</th>
+                                        <th>E-pošta</th>
+                                        <th>Status</th>
+                                        <th>Dejanja</th>
+                                    </tr>
                                 </thead>
                                 <tbody>
-                                {users.map(user => (
-                                    <tr key={user._id}>
-                                        <td className="font-bold">{user.username}</td>
-                                        <td>{user.email}</td>
-                                        <td>
-                                            {user.isAdmin ? (
-                                                <span className="badge badge-info gap-2"><FaUserShield /> Admin</span>
-                                            ) : (
-                                                <span className="badge badge-ghost gap-2"><FaUser /> Uporabnik</span>
-                                            )}
-                                        </td>
-                                        <td>
-                                            <button
-                                                onClick={() => handleToggleAdmin(user._id)}
-                                                disabled={loggedInUser._id === user._id}
-                                                className={`btn btn-xs ${user.isAdmin ? 'btn-warning' : 'btn-success'}`}
-                                            >
-                                                {user.isAdmin ? 'Odstrani admina' : 'Dodaj admina'}
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))}
+                                    {users.map(user => (
+                                        <tr key={user._id}>
+                                            <td className="font-bold">{user.username}</td>
+                                            <td>{user.email}</td>
+                                            <td>
+                                                {user.isAdmin ? (
+                                                    <span className="badge badge-info gap-2"><FaUserShield /> Admin</span>
+                                                ) : (
+                                                    <span className="badge badge-ghost gap-2"><FaUser /> Uporabnik</span>
+                                                )}
+                                            </td>
+                                            <td>
+                                                <button
+                                                    onClick={() => handleToggleAdmin(user._id)}
+                                                    disabled={loggedInUser._id === user._id}
+                                                    className={`btn btn-xs ${user.isAdmin ? 'btn-warning' : 'btn-success'}`}
+                                                >
+                                                    {user.isAdmin ? 'Odstrani admina' : 'Dodaj admina'}
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))}
                                 </tbody>
                             </table>
                         </div>
