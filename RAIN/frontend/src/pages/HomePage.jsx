@@ -28,40 +28,40 @@ const HomePage = () => {
 
     const features = [
         {
-            icon: <FaBox className="text-4xl text-primary mb-4" />,
-            title: "Varna dostava",
-            text: "Varna dostava paketov brez skrbi za izgubo ali poškodbo.",
+            icon: <FaShieldAlt className="text-4xl text-primary mb-4" />,
+            title: "2FA obrazna verifikacija",
+            text: "Napredna tehnologija prepoznave obraza zagotavlja, da lahko do vaših stvari dostopate samo vi.",
         },
         {
             icon: <FaLock className="text-4xl text-primary mb-4" />,
             title: "24/7 dostop",
-            text: "Dostop do paketnika kadarkoli potrebujete svoje pakete.",
+            text: "Varno shranjevanje osebnih stvari z dostopom kadarkoli med delom.",
         },
         {
             icon: <FaMobileAlt className="text-4xl text-primary mb-4" />,
             title: "Mobilno upravljanje",
-            text: "Preprosto upravljanje preko intuitivne mobilne aplikacije.",
+            text: "Preprosto upravljanje in dostop preko intuitivne mobilne aplikacije.",
         },
         {
-            icon: <FaBell className="text-4xl text-primary mb-4" />,
-            title: "Pametna obvestila",
-            text: "Takojšnja obvestila o dostavi vaših paketov.",
+            icon: <FaBox className="text-4xl text-primary mb-4" />,
+            title: "Varno shranjevanje",
+            text: "Zaščitite svoje osebne predmete med delovnim časom v varni pametni omarici.",
         },
     ];
 
     const testimonials = [
         {
-            name: "Ana Kovač",
-            role: "Redna uporabnica",
+            name: "Marija Horvat",
+            role: "Delavka v tovarni",
             content:
-                "Pametni paketnik mi je popolnoma spremenil način sprejemanja pošiljk. Nič več čakanja na dostavljavce!",
+                "Končno lahko varno shranim svojo torbico in osebne stvari med delom. Obrazna verifikacija je super hitra in varna!",
             avatar: "https://randomuser.me/api/portraits/women/12.jpg",
         },
         {
-            name: "Marko Novak",
-            role: "Podjetnik",
+            name: "Janez Kranjec",
+            role: "Vodja izmene",
             content:
-                "Kot lastnik spletne trgovine sem svojim strankam omogočil dodatno možnost dostave, ki jo obožujejo.",
+                "Kot vodja izmene cenim, da se naši delavci počutijo varno glede svojih osebnih stvari. To izboljša delovno vzdušje.",
             avatar: "https://randomuser.me/api/portraits/men/32.jpg",
         },
     ];
@@ -92,8 +92,8 @@ const HomePage = () => {
                                 </button>
                             </div>
                             <div className="absolute bottom-0 w-full bg-base-100/75 p-4">
-                                <h3 className="text-xl font-bold">Pametni paketnik</h3>
-                                <p>Nova generacija dostave</p>
+                                <h3 className="text-xl font-bold">Pametna omarica</h3>
+                                <p>Varno shranjevanje v delovnem okolju</p>
                             </div>
                         </div>
                         <div id="slide2" className="carousel-item relative w-full h-96">
@@ -117,8 +117,8 @@ const HomePage = () => {
                                 </button>
                             </div>
                             <div className="absolute bottom-0 w-full bg-base-100/75 p-4">
-                                <h3 className="text-xl font-bold">Enostavna uporaba</h3>
-                                <p>Za dostavljavce in prejemnike</p>
+                                <h3 className="text-xl font-bold">Obrazna verifikacija</h3>
+                                <p>2FA zaščita z obrazno prepoznavo</p>
                             </div>
                         </div>
                         <div id="slide3" className="carousel-item relative w-full h-96">
@@ -142,20 +142,20 @@ const HomePage = () => {
                                 </button>
                             </div>
                             <div className="absolute bottom-0 w-full bg-base-100/75 p-4">
-                                <h3 className="text-xl font-bold">Priročna lokacija</h3>
-                                <p>Dostopno kjerkoli in kadarkoli</p>
+                                <h3 className="text-xl font-bold">Tovarne po Sloveniji</h3>
+                                <p>Dostopno na različnih lokacijah</p>
                             </div>
                         </div>
                     </div>
 
                     <div className="text-center lg:text-left lg:max-w-md">
                         <h1 className="text-5xl font-bold text-neutral">
-                            Pametni Paketnik
+                            Pametne Omarice
                         </h1>
                         <p className="py-6 text-neutral">
-                            Revolucija v dostavi paketov. Naš pametni paketnik omogoča varno,
-                            dostopno in priročno rešitev za prevzem vaših pošiljk kadarkoli in
-                            kjerkoli.
+                            Revolucija v varnem shranjevanju osebnih stvari za delavce v tovarnah.
+                            Naše pametne omarice z obrazno verifikacijo zagotavljajo največjo varnost
+                            za vaše dragocene predmete med delovnim časom.
                         </p>
                         <div className="flex flex-col sm:flex-row gap-4">
                             {!user ? (
@@ -175,7 +175,7 @@ const HomePage = () => {
                         </div>
                         <div className="flex flex-wrap items-center mt-6 gap-2">
                             <div className="badge badge-lg badge-success gap-2">
-                                <FaShieldAlt /> Varna dostava
+                                <FaShieldAlt /> Obrazna verifikacija
                             </div>
                             <div className="badge badge-lg badge-success gap-2">
                                 <FaCheck /> Brezplačna registracija
@@ -189,12 +189,12 @@ const HomePage = () => {
                 <div className="max-w-7xl mx-auto px-4">
                     <div className="text-center mb-16">
                         <h2 className="text-3xl font-bold text-neutral">
-                            Zakaj izbrati pametni paketnik?
+                            Zakaj izbrati pametno omarico?
                         </h2>
                         <div className="divider max-w-xs mx-auto"></div>
                         <p className="mt-4 text-neutral max-w-2xl mx-auto">
-                            Naši pametni paketniki so zasnovani z mislijo na vas, da bi bila
-                            dostava paketov čim bolj preprosta in varna.
+                            Naše pametne omarice so zasnovane z mislijo na varnost delavcev v tovarnah,
+                            da bi bilo shranjevanje osebnih stvari čim bolj varno in preprosto.
                         </p>
                     </div>
 
@@ -223,8 +223,8 @@ const HomePage = () => {
                         <h2 className="text-3xl font-bold text-neutral">Kako deluje?</h2>
                         <div className="divider max-w-xs mx-auto"></div>
                         <p className="mt-4 text-neutral max-w-2xl mx-auto">
-                            Uporaba pametnega paketnika je preprosta in prilagojena vašemu
-                            udobju.
+                            Uporaba pametne omarice je preprosta in varna z obrazno verifikacijo
+                            za največjo zaščito vaših osebnih stvari.
                         </p>
                     </div>
 
@@ -232,16 +232,16 @@ const HomePage = () => {
                         <div>
                             <img
                                 src="/images/paketnik_in_use.png"
-                                alt="Pametni paketnik v uporabi"
+                                alt="Pametna omarica v uporabi"
                                 className="rounded-lg shadow-xl w-full object-cover h-[400px]"
                             />
                         </div>
                         <div>
                             <ul className="steps steps-vertical lg:steps-horizontal w-full mb-8">
                                 <li className="step step-primary">Registracija</li>
-                                <li className="step step-primary">Izbira paketnika</li>
-                                <li className="step step-primary">Nastavitev dostave</li>
-                                <li className="step">Prevzem paketa</li>
+                                <li className="step step-primary">Obrazna verifikacija</li>
+                                <li className="step step-primary">Izbira omarice</li>
+                                <li className="step">Varno shranjevanje</li>
                             </ul>
 
                             <div className="mt-8">
@@ -254,7 +254,7 @@ const HomePage = () => {
                                     <div className="collapse-content text-neutral">
                                         <p>
                                             Ustvarite svoj račun v samo nekaj preprostih korakih in
-                                            pridobite dostop do vseh funkcij.
+                                            pridobite dostop do varnega shranjevanja v tovarni.
                                         </p>
                                     </div>
                                 </div>
@@ -262,13 +262,13 @@ const HomePage = () => {
                                 <div className="collapse collapse-plus bg-base-100 shadow-lg mb-4 border border-base-300">
                                     <input type="radio" name="my-accordion-2" />
                                     <div className="collapse-title text-xl font-medium flex items-center text-neutral">
-                                        <span className="badge badge-primary mr-3">2</span> Izberite
-                                        paketnik
+                                        <span className="badge badge-primary mr-3">2</span> Nastavite
+                                        obrazno verifikacijo
                                     </div>
                                     <div className="collapse-content text-neutral">
                                         <p>
-                                            Izberite paketnik, ki vam najbolj ustreza po lokaciji in
-                                            velikosti glede na vaše potrebe.
+                                            Varno 2FA preverjanje z obrazno prepoznavo zagotavlja, da lahko
+                                            do vaših stvari dostopate samo vi.
                                         </p>
                                     </div>
                                 </div>
@@ -277,12 +277,12 @@ const HomePage = () => {
                                     <input type="radio" name="my-accordion-2" />
                                     <div className="collapse-title text-xl font-medium flex items-center text-neutral">
                                         <span className="badge badge-primary mr-3">3</span>{" "}
-                                        Nastavite dostavo
+                                        Izberite omarico
                                     </div>
                                     <div className="collapse-content text-neutral">
                                         <p>
-                                            Pri naročilu izdelkov vnesite kodo paketnika za dostavo in
-                                            obvestite dostavljalca o posebnostih.
+                                            Izberite omarico v vaši tovarni, ki vam najbolj ustreza po
+                                            velikosti in lokaciji za lažji dostop.
                                         </p>
                                     </div>
                                 </div>
@@ -291,12 +291,12 @@ const HomePage = () => {
                                     <input type="radio" name="my-accordion-2" />
                                     <div className="collapse-title text-xl font-medium flex items-center text-neutral">
                                         <span className="badge badge-primary mr-3">4</span>{" "}
-                                        Prevzemite paket
+                                        Varno shranjujte
                                     </div>
                                     <div className="collapse-content text-neutral">
                                         <p>
-                                            Prejmite obvestilo o dostavi in enostavno odprite paketnik
-                                            z aplikacijo ali kodo za prevzem.
+                                            Shranite svoje osebne stvari varno med delom in do njih dostopajte
+                                            z obrazno verifikacijo kadarkoli jih potrebujete.
                                         </p>
                                     </div>
                                 </div>
@@ -314,18 +314,18 @@ const HomePage = () => {
                                 <FaBox className="text-4xl" />
                             </div>
                             <div className="stat-title text-neutral">
-                                Dostavljenih paketov
+                                Varno shranjenih predmetov
                             </div>
-                            <div className="stat-value text-neutral">2000</div>
+                            <div className="stat-value text-neutral">5000+</div>
                         </div>
 
                         <div className="stat">
                             <div className="stat-figure text-primary">
                                 <FaMapMarkerAlt className="text-4xl" />
                             </div>
-                            <div className="stat-title text-neutral">Aktivnih paketnikov</div>
-                            <div className="stat-value text-neutral">150+</div>
-                            <div className="stat-desc text-neutral">Po vsej Sloveniji</div>
+                            <div className="stat-title text-neutral">Aktivnih omaric</div>
+                            <div className="stat-value text-neutral">200+</div>
+                            <div className="stat-desc text-neutral">V tovarnah po Sloveniji</div>
                         </div>
 
                         <div className="stat">
@@ -333,10 +333,10 @@ const HomePage = () => {
                                 <FaClock className="text-4xl" />
                             </div>
                             <div className="stat-title text-neutral">
-                                Povprečni čas prevzema
+                                Povprečni čas dostopa
                             </div>
-                            <div className="stat-value text-neutral">12 ur</div>
-                            <div className="stat-desc text-neutral">Po dostavi paketa</div>
+                            <div className="stat-value text-neutral">3 sek</div>
+                            <div className="stat-desc text-neutral">Z obrazno verifikacijo</div>
                         </div>
                     </div>
                 </div>
@@ -350,7 +350,7 @@ const HomePage = () => {
                         </h2>
                         <div className="divider max-w-xs mx-auto"></div>
                         <p className="mt-4 text-neutral max-w-2xl mx-auto">
-                            Več kot 1000 zadovoljnih uporabnikov po vsej Sloveniji.
+                            Več kot 2000 zadovoljnih delavcev v tovarnah po vsej Sloveniji.
                         </p>
                     </div>
 
@@ -413,11 +413,11 @@ const HomePage = () => {
             <div className="py-16 bg-gradient-to-r from-primary to-secondary text-white">
                 <div className="max-w-7xl mx-auto px-4 text-center">
                     <h2 className="text-3xl font-bold mb-6">
-                        Pripravljeni za novo izkušnjo dostave paketov?
+                        Pripravljeni za varno shranjevanje vaših osebnih stvari?
                     </h2>
                     <p className="mb-8 max-w-2xl mx-auto">
-                        Pridružite se tisočim zadovoljnih uporabnikov in začnite uporabljati
-                        pametni paketnik že danes!
+                        Pridružite se tisočim zadovoljnih delavcev v tovarnah in začnite uporabljati
+                        pametno omarico z obrazno verifikacijo že danes!
                     </p>
                     <div className="flex flex-col sm:flex-row justify-center gap-4">
                         {!user ? (
@@ -452,14 +452,14 @@ const HomePage = () => {
                     <div className="footer py-10 grid-cols-2 md:grid-cols-4">
                         <div>
                             <FaBox className="text-3xl" />
-                            <p className="font-bold text-lg">Pametni Paketnik d.o.o.</p>
-                            <p>Zagotavljamo varno dostavo</p>
+                            <p className="font-bold text-lg">Pametne Omarice d.o.o.</p>
+                            <p>Zagotavljamo varno shranjevanje</p>
                         </div>
                         <div>
                             <span className="footer-title">Storitve</span>
-                            <a className="link link-hover">Dostava</a>
-                            <a className="link link-hover">Prevzem</a>
-                            <a className="link link-hover">Sledenje</a>
+                            <a className="link link-hover">Obrazna verifikacija</a>
+                            <a className="link link-hover">Varno shranjevanje</a>
+                            <a className="link link-hover">Mobilni dostop</a>
                             <a className="link link-hover">Podpora</a>
                         </div>
                         <div>
@@ -477,7 +477,7 @@ const HomePage = () => {
 
                     <div className="footer footer-center p-4 border-t border-base-300">
                         <div>
-                            <p>© 2025 Pametni Paketnik d.o.o. - Vse pravice pridržane</p>
+                            <p>© 2025 Pametne Omarice d.o.o. - Vse pravice pridržane</p>
                         </div>
                     </div>
                 </div>
