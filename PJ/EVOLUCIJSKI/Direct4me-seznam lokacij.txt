@@ -1,0 +1,284 @@
+﻿Število 
+
+paketnikov 
+Izročilna 
+
+Mesto Naslov Opis lokacije oz. 
+pošta
+
+Multispace 
+
+paketnik
+Ajdovščina Goriška cesta 24 Ob poštni poslovalnici 6 5270
+
+Benedikt Čolnikov trg 9 Ob poštni poslovalnici 2 2234
+
+Bled Ljubljanska cesta 10 Ob poštni poslovalnici 4 4260
+
+Bohinjska Bistrica Trg svobode 2 C Ob poštni poslovalnici 4 4264
+
+Borovnica Molkov trg 12 Ob poštni poslovalnici 4 1353
+
+Bresternica Obrobna ulica 1 Ob poštni poslovalnici 2 2354
+
+Brezovica pri Ljubljani Podpeška cesta 20 Ob poštni poslovalnici 4 1351
+
+Brežice Ulica stare pravde 34 Ob poštni poslovalnici 4 8250
+
+Celje Krekov trg 9 Ob poštni poslovalnici 6 3101
+
+Črenšovci Ulica Prekmurske čete 14 Ob poštni poslovalnici 2 9232
+
+Črna na Koroškem Center 16 Ob poštni poslovalnici 2 2393
+
+Črnomelj Kolodvorska cesta 30 A Ob poštni poslovalnici 4 8340
+
+Dob Krtina 144 Bar Rožmarinka 3 1233
+
+Dobova Ulica bratov Gerjovičev 52 Ob nekdanji poštni poslovalnici 2 8257
+
+Dravograd Trg 4. julija 1 Ob poštni poslovalnici 4 2370
+
+Gorišnica Gorišnica 79 Ob poštni poslovalnici 2 2272
+
+Gornja Radgona Cesta na Stadion 1 Ob poštni poslovalnici 4 9250
+
+Gornji Grad Podsmrečje 20 Mercator 9 3342
+
+Gornji Grad Attemsov trg 8 Poslovni objekt 6 3342
+
+Grosuplje Partizanska cesta 7 Ob poštni poslovalnici 6 1290
+
+Idrija Vodnikova ulica 1 Ob poštni poslovalnici 4 5280
+
+Ivančna Gorica Ploščad Osvobodilne fronte 4 4 1295
+Ob poštni poslovalnici
+
+Ivanjkovci Ivanjkovci 9 B Ob poštni poslovalnici 1 2259
+
+Izola/Isola Cankarjev drevored 1 Ob poštni poslovalnici 8 6310
+
+Jesenice Cesta Cirila Tavčarja 8 Ob poštni poslovalnici 4 4271
+
+Jesenice na Dolenjskem Jesenice 9 Ob poštni poslovalnici 2 8261
+
+Kamnica Cesta v Rošpoh 18 Ob poštni poslovalnici 3 2351
+
+Kamnik Ljubljanska cesta 14 A Ob poštni poslovalnici 6 1241
+
+Kidričevo Kopališka ulica 2 Ob poštni poslovalnici 2 2325
+
+Kobilje Kobilje 30 Občina Kobilje 3 9227
+
+Kočevje Ljubljanska cesta 23 Ob poštni poslovalnici 6 1330
+
+Komenda Glavarjeva cesta 39 Ob poštni poslovalnici 4 1218
+
+Koper Kolodvorska cesta 9 Ob poštni poslovalnici 8 6104
+
+Kranj Dražgoška ulica 8 Ob poštni poslovalnici 6 4101
+
+Kranj Škofjeloška cesta 17 Ob poštni poslovalnici 4 4103
+
+Kranj Jezerska cesta 41 Ob poštni poslovalnici 4 4104
+
+Kranj Ulica Lojzeta Hrovata 2 Ob poštni poslovalnici 4 4105
+
+Kranjska Gora Borovška cesta 92 Ob poštni poslovalnici 4 4280
+
+Krško Trg Matije Gubca 1 Ob poštni poslovalnici 6 8271
+
+Lenart v Slovenskih goricah Partizanska cesta 3 Ob poštni poslovalnici 4 2230
+
+Lendava/Lendva Trg ljudske pravice 7 Ob poštni poslovalnici 4 9220
+
+Lesce Alpska cesta 37 B Ob poštni poslovalnici 4 4248
+
+Ljubljana Poljanski nasip 30 Ob poštni poslovalnici 4 1104
+
+Ljubljana Pražakova ulica 3 Ob poštni poslovalnici 6 1106
+
+Ljubljana Zaloška cesta 57 Ob poštni poslovalnici 4 1110
+
+
+
+Ljubljana Dunajska cesta 141 Ob poštni poslovalnici 6 1113
+
+Ljubljana Riharjeva ulica 38 Ob poštni poslovalnici 4 1115
+
+Ljubljana Vodnikova cesta 235 Ob poštni poslovalnici 6 1117
+
+Ljubljana Resljeva cesta 14 Ob poštni poslovalnici 4 1124
+
+Ljubljana Letališka cesta 12 1A Avto Letališka 6 1122
+
+Ljubljana Tacenska cesta 94 As Mlakar Tacen Lj. 4 1133
+
+Ljubljana Hrvaška ulica 8 Center Desetka 30 1122
+Multispace 
+
+Ljubljana Ob železnici 22 Direct4me HQ paketnik 1110
+
+Ljubljana Hranilniška ulica 1 Gostilna Raubar 6 1116
+Multispace 
+
+Ljubljana Dunajska cesta 145 Gostilnica Vinka paketnik 1113
+
+Ljubljana Litijska cesta 140 Hayat Market Litijska 6 1119
+Multispace 
+
+Ljubljana Tehnološki park 22a Tehnološki park Ljubljana paketnik 1125
+
+Ljubljana Tržaška cesta 89 Vulkanizerstvo Pečar Tržaška 6 1111
+
+Multispace 
+
+Ljubljana Cesta dveh cesarjev 73 Petrol Barje - jug paketnik 1123
+Multispace 
+
+Ljubljana Cesta dveh cesarjev 71 Petrol Barje - sever paketnik 1123
+
+Ljubljana - Črnuče Dunajska cesta 361 Ob poštni poslovalnici 6 1231
+
+Ljubljana - Polje Zadobrovška cesta 14 Ob poštni poslovalnici 3 1260
+
+Ljubljana - Šentvid Prušnikova ulica 2 Ob poštni poslovalnici 3 1210
+
+Makole Makole 37 Ob poštni poslovalnici 2 2321
+
+Malečnik Malečnik 56 Ob poštni poslovalnici 4 2229
+Multispace 
+
+Maribor Dominkuševa ulica 4 Mala tržnica paketnik 2116
+
+Maribor Istrska ulica 49 Ob poštni poslovalnici 6 2104
+Študentski domovi Maribor DOM 
+
+Maribor Gosposvetska cesta 83 7 6 2101
+
+Maribor Gosposvetska cesta 84 PC Meltal - parkirišče 6 2101
+Multispace 
+
+Maribor Pohorska ulica 21a Tržnica Radvanje paketnik 2115
+Multispace 
+
+Maribor Prvomajska ulica 35 Tržnica Tezno paketnik 2105
+Multispace 
+
+Maribor Radvanjska cesta 63 MČ Nova vas paketnik 2103
+Multispace 
+
+Maribor Razlagova ulica 3 MB Rakušev trg paketnik 2116
+Multispace 
+
+Maribor Šarhova ulica 53 MČ Studenci paketnik 2106
+
+Maribor Šarhova ulica 59 A Ob poštni poslovalnici 6 2106
+
+Študentski domovi Maribor DOM 
+
+Maribor Tyrševa ulica 23 1 6 2101
+
+Multispace 
+
+Maribor Ulica heroja Šlandra 15 MOM Ulica heroja Šlandra paketnik 2116
+
+Mengeš Trdinov trg 8 A Ob poštni poslovalnici 4 1234
+
+Metlika Naselje Borisa Kidriča 2 Ob poštni poslovalnici 2 8330
+
+Mirna Cesta na Fužine 3 Ob poštni poslovalnici 2 8233
+
+Moravče Vegova ulica 1 Ob poštni poslovalnici 4 1251
+
+Mozirje Savinjska cesta 3 Ob poštni poslovalnici 4 3330
+
+Murska Sobota Trg Zmage 6 Ob poštni poslovalnici 6 9101
+
+Murska Sobota Ulica Štefana Kovača 43 Maximus Murska sobota 4 9101
+
+Muta Glavni trg 31 Ob poštni poslovalnici 2 2366
+
+
+
+Naklo Glavna cesta 24 Ob poštni poslovalnici 4 4202
+
+Nova Gorica Kidričeva ulica 19 Ob poštni poslovalnici 6 5101
+
+Nova Gorica Industrijska cesta 9 Ob poštni poslovalnici 6 5102
+
+Novo mesto Ulica Slavka Gruma 7 Ob poštni poslovalnici 4 8102
+
+Novo mesto Novi trg 7 Ob poštni poslovalnici 6 8105
+
+Ormož Poštna ulica 2 Ob poštni poslovalnici 4 2270
+
+Petrovci Gornji Petrovci 40 E Ob poštni poslovalnici 2 9203
+
+Polzela Malteška cesta 38 Ob poštni poslovalnici 2 3313
+
+Postojna Ulica 1. maja 2 A Ob poštni poslovalnici 4 6230
+
+Preddvor Šiška 1 Ob poštni poslovalnici 4 4205
+
+Prevalje Trg 32 A Ob poštni poslovalnici 4 2391
+
+Ptuj Mariborska Cesta 19 Ob poštni poslovalnici 6 2251
+
+Rače Ljubljanska cesta 14 Ob poštni poslovalnici 4 2327
+
+Radenci Panonska cesta 5 Ob poštni poslovalnici 4 9252
+
+Ravne na Koroškem Trg svobode 19 Ob poštni poslovalnici 6 2390
+
+Ribnica Kolodvorska ulica 2 Ob poštni poslovalnici 4 1310
+
+Selnica ob Dravi Slovenski trg 4 Ob poštni poslovalnici 4 2352
+
+Sevnica Trg svobode 9 Ob poštni poslovalnici 4 8290
+
+Sežana Partizanska cesta 48 A Ob poštni poslovalnici 6 6210
+
+Slovenj Gradec Kidričeva ulica 3a Kivi Com Slovenj Gradec 3 2380
+
+Spodnji Duplek Cesta k Dravi 5 Ob poštni poslovalnici 2 2241
+
+Šempeter pri Gorici Vrtojbenska cesta 19 C Ob poštni poslovalnici 4 5290
+
+Šenčur Gasilska cesta 2 A Ob poštni poslovalnici 4 4208
+
+Šentjernej Prvomajska cesta 3 Ob poštni poslovalnici 4 8310
+
+Šentjur Mestni trg 5a Ob poštni poslovalnici 6 3230
+
+Škofja Loka Kapucinski trg 14 Ob poštni poslovalnici 4 4221
+
+Šmarje pri Jelšah Aškerčev trg 26 Ob poštni poslovalnici 2 3240
+
+Tolmin Trg maršala Tita 10 Ob poštni poslovalnici 4 5220
+
+Trbovlje Trg revolucije 27 Ob poštni poslovalnici 4 1420
+
+Trbovlje Trg Franca Fakina 4 Ob poštni poslovalnici 4 1422
+
+Trebnje Goliev trg 11 Ob poštni poslovalnici 4 8210
+
+Tržič Predilniška cesta 10 Ob poštni poslovalnici 4 4290
+
+Velenje Kidričeva cesta 2a Ob poštni poslovalnici 6 3320
+
+Vrhnika Poštna ulica 2 Ob poštni poslovalnici 6 1360
+
+Vrhnika Tržaška cesta 32 Kulturni center Vrhnika 15 1360
+
+Zagorje ob Savi Cesta zmage 28 Ob poštni poslovalnici 4 1410
+
+Zgornja Polskava Mariborska ulica 26 Ob poštni poslovalnici 2 2314
+
+Žalec Ulica heroja Staneta 1 Ob poštni poslovalnici 4 3310
+
+Železniki Na Kresu 1 Ob poštni poslovalnici 4 4228
+
+Žiri Trg svobode 1 Ob poštni poslovalnici 4 4226
+
+Žirovnica Žirovnica 4 Ob poštni poslovalnici 4 4274

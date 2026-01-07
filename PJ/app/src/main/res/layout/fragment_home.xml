@@ -15,9 +15,24 @@
         android:textSize="24sp"
         android:textAlignment="center"
         app:cornerRadius="100dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/button_tsp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_tsp"
+        android:layout_width="200dp"
+        android:layout_height="80dp"
+        android:text="TSP Algoritmi"
+        android:textSize="18sp"
+        android:textAlignment="center"
+        app:cornerRadius="40dp"
+        app:layout_constraintTop_toBottomOf="@+id/button_scan_qr"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="32dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

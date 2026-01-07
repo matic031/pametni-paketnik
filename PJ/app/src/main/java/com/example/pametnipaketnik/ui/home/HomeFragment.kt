@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -21,6 +22,23 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private val TAG = "HomeFragment"
+    
+    private val qrScanLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val boxIdStr = result.data?.getStringExtra("BOX_ID")
+            val boxId = OpenBoxRepository.extractBoxId(boxIdStr)
+            if (boxId != null) {
+                Toast.makeText(requireContext(), "Predvajam žeton...", Toast.LENGTH_SHORT).show()
+                viewLifecycleOwner.lifecycleScope.launch {
+                    OpenBoxRepository.openBoxAndLog(requireContext(), boxId, 2) {
+                        showConfirmationDialog(boxId, "Predvajanje končano", 200)
+                    }
+                }
+            } else {
+                Toast.makeText(requireContext(), "QR koda ne vsebuje veljavnega ID-ja: $boxIdStr", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,29 +53,15 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.buttonScanQr.setOnClickListener {
             val intent = Intent(requireContext(), QrScanActivity::class.java)
-            startActivityForResult(intent, 1001)
+            qrScanLauncher.launch(intent)
+        }
+        
+        binding.buttonTsp.setOnClickListener {
+            val intent = Intent(requireContext(), com.example.pametnipaketnik.TSPActivity::class.java)
+            startActivity(intent)
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 1001 && resultCode == Activity.RESULT_OK) {
-            val boxIdStr = data?.getStringExtra("BOX_ID")
-            val boxId = OpenBoxRepository.extractBoxId(boxIdStr)
-            if (boxId != null) {
-                Toast.makeText(requireContext(), "Predvajam žeton...", Toast.LENGTH_SHORT).show()
-                viewLifecycleOwner.lifecycleScope.launch {
-
-                    OpenBoxRepository.openBoxAndLog(requireContext(), boxId, 2) {
-
-                        showConfirmationDialog(boxId, "Predvajanje končano", 200)
-                    }
-                }
-            } else {
-                Toast.makeText(requireContext(), "QR koda ne vsebuje veljavnega ID-ja: $boxIdStr", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
 
     private fun showConfirmationDialog(boxId: Int, apiMessage: String, responseCode: Int) {
         AlertDialog.Builder(requireContext())
