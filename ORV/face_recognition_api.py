@@ -1,6 +1,6 @@
 import os
 import sys
-from flask import Flask, request, jsonify, send_from_directory
+from flask import Flask, request, jsonify, send_from_directory, Response
 from flask_cors import CORS
 import numpy as np
 import cv2
@@ -17,6 +17,19 @@ try:
         delete_user,
         VERIFICATION_THRESHOLD,
     )
+
+    sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
+    try:
+        from compression.image_compressor import (
+            compress_face_image,
+            decompress_face_image,
+            get_compression_stats,
+        )
+        FLOCIC_AVAILABLE = True
+        print("FLoCIC compression module loaded successfully")
+    except ImportError as flocic_error:
+        print(f"Warning: FLoCIC compression not available: {flocic_error}")
+        FLOCIC_AVAILABLE = False
 
     try:
         from face_processing.detection import detect_face
@@ -49,7 +62,6 @@ print("Face recognition API ready!")
 
 @app.route("/health", methods=["GET"])
 def health_check():
-    """Health check endpoint"""
     return jsonify(
         {"status": "healthy", "service": "Face Recognition API", "version": "1.0.0"}
     )
@@ -57,10 +69,6 @@ def health_check():
 
 @app.route("/register", methods=["POST"])
 def register_user_face():
-    """
-    Register user with face embeddings
-    Expects: user_id and image file
-    """
     try:
         user_id = request.form.get("user_id")
         if not user_id:
@@ -85,6 +93,14 @@ def register_user_face():
             return jsonify({"success": False, "message": "No image file selected"}), 400
 
         image_bytes = image_file.read()
+
+        compression_info = None
+        if FLOCIC_AVAILABLE:
+            try:
+                compression_info = compress_face_image(image_bytes, user_id, save_to_storage=True)
+                print(f"[FLoCIC] Face image compressed for user {user_id}: ratio={compression_info['compression_ratio']:.2f}x")
+            except Exception as comp_error:
+                print(f"[FLoCIC] Compression failed (non-critical): {comp_error}")
 
         embedding_result = get_embedding_from_image_bytes(image_bytes)
         if embedding_result is None:
@@ -150,13 +166,18 @@ def register_user_face():
 
                 register_user_embeddings(user_id, embeddings_np)
 
-                return jsonify(
-                    {
-                        "success": True,
-                        "message": f"User {user_id} registered successfully",
-                        "embeddings_count": len(embeddings_np),
+                response_data = {
+                    "success": True,
+                    "message": f"User {user_id} registered successfully",
+                    "embeddings_count": len(embeddings_np),
+                }
+                if compression_info:
+                    response_data["compression"] = {
+                        "ratio": round(compression_info['compression_ratio'], 2),
+                        "original_size": compression_info['original_size'],
+                        "compressed_size": compression_info['compressed_size'],
                     }
-                )
+                return jsonify(response_data)
 
             except Exception as e:
                 print(f"Error during augmentation: {e}")
@@ -192,10 +213,6 @@ def register_user_face():
 
 @app.route("/verify", methods=["POST"])
 def verify_user_face():
-    """
-    Verify user with face image
-    Expects: user_id and image file
-    """
     try:
         user_id = request.form.get("user_id")
         if not user_id:
@@ -244,7 +261,6 @@ def verify_user_face():
 
 @app.route("/user/<user_id>", methods=["GET"])
 def get_user_info(user_id):
-    """Get user registration status"""
     try:
         is_registered = is_user_registered(user_id)
         return jsonify(
@@ -259,7 +275,6 @@ def get_user_info(user_id):
 
 @app.route("/user/<user_id>", methods=["DELETE"])
 def delete_user_face(user_id):
-    """Delete user face registration"""
     try:
         if not is_user_registered(user_id):
             return jsonify({"success": False, "message": "User not registered"}), 404
@@ -275,20 +290,45 @@ def delete_user_face(user_id):
         )
 
 
+@app.route("/compression/stats", methods=["GET"])
+def compression_statistics():
+    if not FLOCIC_AVAILABLE:
+        return jsonify({"success": False, "message": "FLoCIC compression not available"}), 503
+
+    user_id = request.args.get("user_id")
+    stats = get_compression_stats(user_id)
+
+    return jsonify({
+        "success": True,
+        "stats": {
+            "total_archived_images": stats['total_files'],
+            "total_compressed_bytes": stats['total_compressed_bytes'],
+            "estimated_original_bytes": stats['estimated_original_bytes'],
+            "space_saved_bytes": stats['estimated_savings'],
+            "average_compression_ratio": round(stats['average_ratio'], 2),
+        }
+    })
+
+
 @app.route("/", methods=["GET"])
 def index():
-    """API documentation"""
+    endpoints = {
+        "POST /register": "Register user with face image (multipart/form-data: user_id, image)",
+        "POST /verify": "Verify user with face image (multipart/form-data: user_id, image)",
+        "GET /user/<user_id>": "Get user registration status",
+        "DELETE /user/<user_id>": "Delete user registration",
+        "GET /health": "Health check",
+    }
+
+    if FLOCIC_AVAILABLE:
+        endpoints["GET /compression/stats"] = "Get FLoCIC compression statistics"
+
     return jsonify(
         {
             "service": "Face Recognition API",
-            "version": "1.0.0",
-            "endpoints": {
-                "POST /register": "Register user with face image (multipart/form-data: user_id, image)",
-                "POST /verify": "Verify user with face image (multipart/form-data: user_id, image)",
-                "GET /user/<user_id>": "Get user registration status",
-                "DELETE /user/<user_id>": "Delete user registration",
-                "GET /health": "Health check",
-            },
+            "version": "1.1.0",
+            "flocic_compression": FLOCIC_AVAILABLE,
+            "endpoints": endpoints,
         }
     )
 
@@ -296,10 +336,13 @@ def index():
 if __name__ == "__main__":
     print("Starting Face Recognition API server...")
     print("Available endpoints:")
-    print("  POST /register - Register user with face")
+    print("  POST /register - Register user with face (+ FLoCIC archive)")
     print("  POST /verify - Verify user with face")
     print("  GET /user/<user_id> - Get user status")
     print("  DELETE /user/<user_id> - Delete user")
     print("  GET /health - Health check")
+    if FLOCIC_AVAILABLE:
+        print("  GET /compression/stats - FLoCIC compression statistics")
+        print("\n[FLoCIC] Image compression ENABLED - face images will be archived")
 
     app.run(host="0.0.0.0", port=5000, debug=True)
